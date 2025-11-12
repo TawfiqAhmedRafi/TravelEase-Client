@@ -1,68 +1,78 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@import "tailwindcss";
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "travelsease_dark";
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+  /* Main brand colors */
+  --color-primary: #2C4A6E;      /* Deep charcoal/navy for luxury feel */
+  --color-secondary: #D4AF37;    /* Metallic gold accent */
+  --color-accent: #367d8a;       /* Slate accent for subtle highlights */
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  /* Background colors */
+  --color-base-100: #181E28;     /* Slightly lighter dark background */
+  --color-base-200: #232930;     /* Card background */
+  --color-base-300: #2E353D;     /* Secondary elements / borders */
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  /* Text / neutral */
+  --color-neutral: #E5E5E5;      /* Light text */
+  --color-primary-content: #FFFFFF;
+  --color-secondary-content: #FFFFFF;
+  --color-accent-content: #FFFFFF;
+  --color-base-content: #E5E5E5;
+  --color-neutral-content: #E5E5E5;
+
+  /* Optional accents */
+  --color-info: #60A5FA;      /* Soft info blue */
+  --color-success: #34D399;   /* Green success */
+  --color-warning: #FDBA74;   /* Orange warning */
+  --color-error: #F87171;     /* Red error */
+ 
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+@plugin "daisyui/theme" {
+  name: "travelsease_light";
+  default: true;
+
+  /* Main brand colors */
+  --color-primary: #1F2E3D;      /* Deep charcoal/navy for consistency */
+  --color-secondary: #D4AF37;    /* Gold accent */
+  --color-accent: #607D8B;       /* Slate accent */
+
+  /* Background colors */
+  --color-base-100: #FFFFFF;      /* Page / card background */
+  --color-base-200: #F7F7F7;      /* Slightly darker card background */
+  --color-base-300: #EDEDED;      /* Borders / secondary elements */
+
+  /* Text / neutral */
+  --color-neutral: #2E2E2E;       /* Dark text for readability */
+  --color-primary-content: #FFFFFF;
+  --color-secondary-content: #FFFFFF;
+  --color-accent-content: #FFFFFF;
+  --color-base-content: #2E2E2E;
+  --color-neutral-content: #2E2E2E;
+
+  /* Optional accents */
+  --color-info: #3B82F6;      /* Info blue */
+  --color-success: #22C55E;   /* Success green */
+  --color-warning: #FB923C;   /* Warning orange */
+  --color-error: #EF4444;     /* Error red */
+ 
+
+}
+.fredoka-font {
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+ 
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+.poppins-font {
+  font-family: "Poppins", sans-serif;
+ 
+  font-style: normal;
 }
