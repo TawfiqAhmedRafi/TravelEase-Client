@@ -47,7 +47,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/myVehicles",
-    loader: () => fetch("http://localhost:3000/vehicles"),
+    loader: () => fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
     element: (
       <PrivateRoute>
         {" "}
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/allVehicles",
-    loader: () => fetch("http://localhost:3000/vehicles"),
+    loader: () => fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
     Component: AllVehiclesPage,
     hydrateFallbackElement: <LoadingPage></LoadingPage>,
   },
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
   {
     path: "/vehicles/:id",
     loader: ({ params }) =>
-      fetch(`http://localhost:3000/vehicles/${params.id}`),
+      fetch(`https://travel-ease-server-roan.vercel.app/vehicles/${params.id}`),
     element: (
       <PrivateRoute>
         <ViewDetails></ViewDetails>

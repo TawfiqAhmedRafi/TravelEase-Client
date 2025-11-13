@@ -1,16 +1,50 @@
-# React + Vite
+# TravelEase — Vehicle Booking Application
+Discover, book, and manage vehicles effortlessly with TravelEase.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## Overview
+TravelEase is a modern vehicle booking application that allows users to browse, book, and manage vehicle reservations easily. The backend (Node.js + Express + MongoDB) exposes REST APIs, while the frontend (React + Vite/Next.js) provides a smooth user experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Key Features
+- Browse & search listings with filters (location, price, ratings)
+- Booking flow: select dates, confirm
+- User authentication: sign up, login, log out
+- Manage bookings: view, cancel, 
+- Reviews & ratings for listings
+- Media handling: image galleries (upload via backend/third-party)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Architecture & Design Highlights
+- **Separation of concerns:** frontend + backend; APIs are stateless and documented
+- **Database:** MongoDB for flexible listing and booking schemas
+- **Security:** input validation, bcrypt for passwords,  CORS and rate-limiting recommended
+- **Scalability:** modular routes, service layer for business logic, background jobs for email/notifications
+- **Performance:** client code-splitting, image optimization, and caching strategies supported
+
+---
+
+## Live Site
+- Live link: [https://travelease-ced9c.web.app/]  
+- Vercel: [https://travel-ease-server-roan.vercel.app/]  
+
+
+
+---
+
+## Tech Stack
+**Backend:** Node.js, Express, MongoDB  
+**Frontend:** React + Vite (or Next.js)  
+**Styling:** TailwindCSS or SASS  
+**Routing:** react-router-dom or next/router  
+**Forms & validation:** react-hook-form / formik + yup  
+**HTTP requests:** Axios  
+**State management:** Redux or Zustand (optional)  
+**Date utilities:** date-fns or moment  
+
+---
+

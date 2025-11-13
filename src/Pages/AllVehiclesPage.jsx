@@ -6,7 +6,7 @@ import VehicleCard from "../Components/VehicleCard/VehicleCard";
 import useAxios from "../Router/hooks/useAxios";
 
 
-const categories = ["All", "SUV", "Sedan", "Sports", "Electric"];
+const categories = ["All", "SUV", "Sedan", "Sports", "Electric","Hatchback","Hybrid","Van"];
 
 const AllVehiclesPage = () => {
   const axiosInstance = useAxios();

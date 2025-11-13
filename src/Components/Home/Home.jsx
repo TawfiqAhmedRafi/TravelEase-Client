@@ -4,7 +4,7 @@ import LoadingPage from '../../Pages/LoadingPage';
 import Banner from '../Banner/Banner';
 
 
-const latestVehiclesPromise = fetch("http://localhost:3000/latest-vehicles").then(res => res.json());
+const latestVehiclesPromise = fetch("https://travel-ease-server-roan.vercel.app/latest-vehicles").then(res => res.json());
 const Home = () => {
     return (
         <div>
