@@ -7,6 +7,11 @@ import AddVehicles from '../Pages/AddVehicles';
 import AuthLayout from '../Layouts/AuthLayout';
 import Login from '../Components/Login/Login';
 import Register from '../Register/Register';
+import ForgetPass from '../Pages/ForgetPass';
+import ErrorPage from '../Pages/ErrorPage';
+import MyVehicles from '../Pages/MyVehicles';
+import MyBookings from '../Pages/MyBookings';
+import PrivateRoute from '../Context/PrivateRoute';
 
 
 
@@ -41,8 +46,31 @@ const router = createBrowserRouter([
         path: "/auth/register",
         element: <Register></Register>,
       },
+      {
+        path: "/auth/forgetpass",
+        element: <ForgetPass></ForgetPass>,
+      },
       
     ],
   },
+  {
+    path : "/myVehicles",
+    element:(
+        <PrivateRoute> <MyVehicles></MyVehicles></PrivateRoute>
+    )
+    
+
+  },
+  {
+ path : "/bookings",
+ element :(
+    <PrivateRoute><MyBookings></MyBookings></PrivateRoute>
+ )
+  
+  },
+  {
+    path : "*",
+    element : <ErrorPage></ErrorPage>
+  }
 ]);
 export default router
