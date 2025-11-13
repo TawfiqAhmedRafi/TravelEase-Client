@@ -24,11 +24,6 @@ const router = createBrowserRouter([
         index: true,
         Component: Home,
       },
-
-      {
-        path: "/addVehicles",
-        Component: AddVehicles,
-      },
     ],
   },
   {
@@ -62,7 +57,15 @@ const router = createBrowserRouter([
     path: "/allVehicles",
     loader: () => fetch("http://localhost:3000/vehicles"),
     Component: AllVehiclesPage,
-     hydrateFallbackElement: <LoadingPage></LoadingPage>,
+    hydrateFallbackElement: <LoadingPage></LoadingPage>,
+  },
+  {
+    path: "/addVehicles",
+    element: (
+      <PrivateRoute>
+        <AddVehicles></AddVehicles>
+      </PrivateRoute>
+    ),
   },
   {
     path: "/bookings",
