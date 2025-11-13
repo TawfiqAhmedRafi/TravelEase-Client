@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 import LoadingPage from "./LoadingPage";
 import Swal from "sweetalert2";
 
+import useAxios from "../Router/hooks/useAxios";
+
 const MyBookings = () => {
+    const axiosInstance = useAxios();
   const { user } = use(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,11 +19,12 @@ const MyBookings = () => {
 
     const fetchBookings = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:3000/my-bookings-details?email=${user.email}`
-        );
-        const data = await res.json();
-        setBookings(data);
+       axiosInstance.get(`/my-bookings-details?email=${user.email}`)
+       .then(data=>{
+        
+        setBookings(data.data);
+       })
+        
       } catch (err) {
         console.error(err);
         toast.error("Failed to fetch bookings");
@@ -30,8 +34,9 @@ const MyBookings = () => {
     };
 
     fetchBookings();
-  }, [user]);
-  const handleCancelBooking = async (vehicleId) => {
+  }, [user,axiosInstance]);
+
+ const handleCancelBooking = async (vehicleId) => {
   const result = await Swal.fire({
     title: "Are you sure?",
     text: "Do you really want to cancel this booking?",
@@ -44,24 +49,22 @@ const MyBookings = () => {
 
   if (result.isConfirmed) {
     try {
-      const res = await fetch(
-        `http://localhost:3000/bookings?vehicleId=${vehicleId}&userEmail=${user.email}`,
-        { method: "DELETE" }
-      );
+      const { data } = await axiosInstance.delete("/bookings", {
+        params: {
+          vehicleId,
+          userEmail: user.email,
+        },
+      });
 
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message);
-        // Remove the cancelled booking from state
-        setBookings((prev) =>
-          prev.filter((booking) => booking.vehicleId !== vehicleId)
-        );
-      } else {
-        toast.error(data.error || "Failed to cancel booking");
-      }
+      toast.success(data.message);
+
+      // Remove the cancelled booking from state
+      setBookings((prev) =>
+        prev.filter((booking) => booking.vehicleId !== vehicleId)
+      );
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error(err.response?.data?.error || "Something went wrong");
     }
   } else {
     Swal.fire("Cancelled", "Your booking is safe :)", "info");

@@ -3,7 +3,7 @@ import VehicleCard from '../Components/VehicleCard/VehicleCard';
 
 const LatestVehicles = ({latestVehiclesPromise}) => {
     const vehicles = use(latestVehiclesPromise);
-    console.log(vehicles);
+   
     return (
         <div>
             <h2 className='text-3xl md:text-5xl font-semibold text-primary text-center mb-5 poppins-font'>Latest <span className='text-secondary'>Vehicles</span></h2>

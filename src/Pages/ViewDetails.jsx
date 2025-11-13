@@ -12,7 +12,10 @@ import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
 
+import useAxios from "../Router/hooks/useAxios";
+
 const ViewDetails = () => {
+  const axiosInstance = useAxios();
   const loadedVehicle = useLoaderData();
   const [vehicle, setVehicle] = useState(loadedVehicle);
   const bookingModalRef = useRef(null);
@@ -23,41 +26,51 @@ const ViewDetails = () => {
     bookingModalRef.current.showModal();
   };
 
-  const handleBookingSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
+ const handleBookingSubmit = async (e) => {
+  e.preventDefault();
+  const form = e.target;
 
-    const email = form.email.value;
-    const days = form.days.value;
-    const carName = form.carName.value;
-    const newBooking = {
-      vehicleId: _id,
-      vehicleName: carName,
-      userEmail: email,
-      bookFor: days,
-    };
-    fetch("http://localhost:3000/bookings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newBooking),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("after book", data);
-         bookingModalRef.current.close();
-         setVehicle((prev) => ({ ...prev, availability: "Booked" }));
-        Swal.fire({
+  const email = form.email.value;
+  const days = form.days.value;
+  const carName = form.carName.value;
+
+  const newBooking = {
+    vehicleId: _id,
+    vehicleName: carName,
+    userEmail: email,
+    bookFor: days,
+  };
+
+  try {
+
+    const { data } = await axiosInstance.post("/bookings", newBooking);
+
+    
+
+    bookingModalRef.current.close();
+
+  
+    setVehicle((prev) => ({ ...prev, availability: "Booked" }));
+
+   
+    Swal.fire({
       title: "Success!",
-      text: `${carName} is booked  successfully for ${days} days.`,
+      text: `${carName} is booked successfully for ${days} days.`,
       icon: "success",
       button: "OK",
     });
+  } catch (error) {
+    console.error("Booking failed", error);
 
-      });
-       
-  };
+    // Show error message
+    Swal.fire({
+      title: "Error!",
+      text: "Failed to book the vehicle. Please try again.",
+      icon: "error",
+      button: "OK",
+    });
+  }
+};
 
   const {
     _id,

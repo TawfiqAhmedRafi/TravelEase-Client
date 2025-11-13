@@ -7,83 +7,100 @@ import { AuthContext } from '../Context/AuthContext';
 import { toast } from 'react-toastify';
 import { useNavigate , Link } from 'react-router';
 
+import useAxios from '../Router/hooks/useAxios';
+
 const Register = () => {
+
       const { createUser, setUser,  googleSignIn ,updateUser} = use(AuthContext);
+     const axiosInstance = useAxios();
     const [showPassword,setShowPassword]=useState(false);
      const [passwordError, setPasswordError] = useState("");
      const navigate = useNavigate();
 
- const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const form = e.target;
-    const name = form.name.value;
-    const photo = form.photo.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const uppercasePattern = /[A-Z]/;
-    const lowercasePattern = /[a-z]/;
+  const form = e.target;
+  const name = form.name.value;
+  const photo = form.photo.value;
+  const email = form.email.value;
+  const password = form.password.value;
 
-    if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long.");
-      return;
-    }
+  const uppercasePattern = /[A-Z]/;
+  const lowercasePattern = /[a-z]/;
 
-    if (!uppercasePattern.test(password)) {
-      setPasswordError("Password must contain at least one uppercase letter.");
-      return;
-    }
+  // Password validations
+  if (password.length < 6) {
+    setPasswordError("Password must be at least 6 characters long.");
+    return;
+  }
+  if (!uppercasePattern.test(password)) {
+    setPasswordError("Password must contain at least one uppercase letter.");
+    return;
+  }
+  if (!lowercasePattern.test(password)) {
+    setPasswordError("Password must contain at least one lowercase letter.");
+    return;
+  }
 
-    if (!lowercasePattern.test(password)) {
-      setPasswordError("Password must contain at least one lowercase letter.");
-      return;
-    }
-   // console.log({ email, password, name, photo });
-    createUser(email, password)
-      .then((res) => {
-        const user = res.user;
-        updateUser({ displayName: name, photoURL: photo })
-          .then(() => {
-            setUser({ ...user, displayName: name, photoURL: photo });
-            navigate("/");
-          })
-          .catch((error) => console.log(error));
-        setUser(user);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        toast(errorMessage);
-      });
-  };
-const handleGoogle=()=>{
-    return googleSignIn()
-    .then((res)=>{
-         const user = res.user;
-         const newUser={
-            name : user.displayName,
-            email : user.email,
-            image : user.photoURL
-         }
-        fetch("http://localhost:3000/users",{
-            method:"POST",
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(newUser)
-        }).then(res=>res.json()).then(data=>{
-            console.log("after user", data)
-        })
-     
-      
+  try {
+    // Create user with auth
+    const res = await createUser(email, password);
+    const user = res.user;
+
+    // Update user profile
+    await updateUser({ displayName: name, photoURL: photo });
+
+    // Save user in state
+    setUser({ ...user, displayName: name, photoURL: photo });
+
+    // Prepare new user data for backend
+    const newUser = {
+      name,
+      email,
+      image: photo,
+    };
+
+    // Save user to backend
+    const { data } = await axiosInstance.post("/users", newUser);
+    
+
+    toast.success("Sign-up successful!");
+    navigate("/");
+  } catch (error) {
+    console.error(error);
+    toast.error(error.message || "Sign-up failed!");
+  }
+};
+const handleGoogle = () => {
+  return googleSignIn()
+    .then(async (res) => {
+      const user = res.user;
+
+      const newUser = {
+        name: user.displayName,
+        email: user.email,
+        image: user.photoURL,
+      };
+
+      try {
+        // Axios automatically sets Content-Type for JSON
+        const { data } = await axiosInstance.post("/users", newUser);
+       
+      } catch (error) {
+        console.error("Failed to save user", error);
+        toast.error("Failed to save user info.");
+      }
+
       setUser(user);
-       toast.success("Google sign-up successful!");
+      toast.success("Google sign-up successful!");
       navigate("/");
     })
-     .catch((error) => {
-        const errorMessage = error.message;
-        toast(errorMessage);
-      });
-  }
+    .catch((error) => {
+      const errorMessage = error.message;
+      toast(errorMessage);
+    });
+};
     return (
          <div>
       <header>

@@ -3,10 +3,13 @@ import { motion, LayoutGroup } from "framer-motion";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import VehicleCard from "../Components/VehicleCard/VehicleCard";
+import useAxios from "../Router/hooks/useAxios";
+
 
 const categories = ["All", "SUV", "Sedan", "Sports", "Electric"];
 
 const AllVehiclesPage = () => {
+  const axiosInstance = useAxios();
   const [vehicles, setVehicles] = useState([]);
   const [filters, setFilters] = useState({
     category: "",
@@ -15,17 +18,18 @@ const AllVehiclesPage = () => {
     order: "asc",
   });
 
-  // Fetch vehicles
+  
   useEffect(() => {
     const fetchVehicles = async () => {
       const params = new URLSearchParams(filters);
-      const res = await fetch(`http://localhost:3000/vehicles?${params}`);
-      const data = await res.json();
-      setVehicles(data);
+      axiosInstance.get(`/vehicles?${params}`)
+      .then(data =>{
+        setVehicles(data.data);
+      })
     };
     fetchVehicles();
-  }, [filters]);
-
+  }, [filters,axiosInstance]);
+  
   const handleCategoryClick = (meow) => {
   setFilters((prev) => ({
     ...prev,

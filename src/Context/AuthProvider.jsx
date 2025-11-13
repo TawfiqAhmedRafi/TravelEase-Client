@@ -54,7 +54,7 @@ const passwordReset = (email) => {
       unsubscribe();
     };
   }, []);
-console.log(user);
+
   const authInfo = {
     createUser,
     user,

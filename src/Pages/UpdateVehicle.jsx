@@ -4,8 +4,12 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { toast } from "react-toastify";
 
+import useAxios from "../Router/hooks/useAxios";
+import LoadingPage from "./LoadingPage";
+
 const UpdateVehicle = () => {
   const { id } = useParams();
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,10 +17,10 @@ const UpdateVehicle = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/vehicles/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch vehicle data");
-        const data = await res.json();
-        setVehicle(data);
+        axiosInstance.get(`/vehicles/${id}`)
+        .then(data=>{
+            setVehicle(data.data);
+        })
       } catch (err) {
         console.error(err);
         toast.error(err.message || "Failed to fetch vehicle data");
@@ -25,49 +29,40 @@ const UpdateVehicle = () => {
       }
     };
     fetchVehicle();
-  }, [id]);
+  }, [id,axiosInstance]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVehicle((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (!vehicle) return;
+ const handleUpdate = async (e) => {
+  e.preventDefault();
+  if (!vehicle) return;
 
-    try {
-      const updatedData = {
-        vehicleName: vehicle.vehicleName,
-        category: vehicle.category,
-        fuelType: vehicle.fuelType,
-        pricePerDay: vehicle.pricePerDay,
-        location: vehicle.location,
-        description: vehicle.description,
-        coverImage: vehicle.coverImage, // added coverImage
-      };
+  try {
+    const updatedData = {
+      vehicleName: vehicle.vehicleName,
+      category: vehicle.category,
+      fuelType: vehicle.fuelType,
+      pricePerDay: vehicle.pricePerDay,
+      location: vehicle.location,
+      description: vehicle.description,
+      coverImage: vehicle.coverImage, // included coverImage
+    };
 
-      const res = await fetch(`http://localhost:3000/vehicles/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-      });
+    // Axios PATCH request
+    const { data } = await axiosInstance.patch(`/vehicles/${id}`, updatedData);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success("Vehicle updated successfully!");
-        navigate("/myVehicles");
-      } else {
-        toast.error(data.error || "Failed to update vehicle");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong");
-    }
-  };
-
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+    toast.success("Vehicle updated successfully!");
+    navigate("/myVehicles");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.error || "Something went wrong");
+  }
+};
+  if (loading) return <LoadingPage></LoadingPage>;
   if (!vehicle) return <div className="text-center py-20">Vehicle not found.</div>;
 
   return (

@@ -4,9 +4,12 @@ import Footer from "../Components/Footer/Footer";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { AuthContext } from "../Context/AuthContext";
+import useAxios from "../Router/hooks/useAxios";
+
 
 const AddVehicles = () => {
     const {user} = use(AuthContext)
+    const axiosInstance = useAxios()
   const [vehicle, setVehicle] = useState({
     vehicleName: "",
     category: "",
@@ -25,51 +28,48 @@ const AddVehicles = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-   
-    if (!vehicle.vehicleName || !vehicle.category || !vehicle.pricePerDay) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+  // Validate required fields
+  if (!vehicle.vehicleName || !vehicle.category || !vehicle.pricePerDay) {
+    toast.error("Please fill in all required fields");
+    return;
+  }
 
-    try {
-      const res = await fetch("http://localhost:3000/vehicles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...vehicle, owner:user.displayName , userEmail: user.email, createdAt: new Date() }),
-      });
+  try {
+    // POST request using Axios
+    const { data } = await axiosInstance.post("/vehicles", {
+      ...vehicle,
+      owner: user.displayName,
+      userEmail: user.email,
+      createdAt: new Date(),
+    });
 
-      const data = await res.json();
-      if (res.ok) {
-        Swal.fire({
-          title: "Success!",
-          text: "Vehicle added successfully!",
-          icon: "success",
-          confirmButtonColor: "#D4AF37",
-          confirmButtonText: "OK",
-        });
+    Swal.fire({
+      title: "Success!",
+      text: "Vehicle added successfully!",
+      icon: "success",
+      confirmButtonColor: "#D4AF37",
+      confirmButtonText: "OK",
+    });
 
-        setVehicle({
-          vehicleName: "",
-          category: "",
-          pricePerDay: "",
-          location: "",
-          availability: "Available",
-          fuelType: "",
-          seatCapacity: "",
-          description: "",
-          coverImage: "",
-        });
-      } else {
-        toast.error(data.error || "Failed to add vehicle");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add vehicle");
-    }
-  };
-
+    // Reset vehicle form
+    setVehicle({
+      vehicleName: "",
+      category: "",
+      pricePerDay: "",
+      location: "",
+      availability: "Available",
+      fuelType: "",
+      seatCapacity: "",
+      description: "",
+      coverImage: "",
+    });
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.error || "Failed to add vehicle");
+  }
+};
   return (
     <div>
       <header>

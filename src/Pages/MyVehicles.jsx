@@ -5,7 +5,10 @@ import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import UpdateVehicleCard from "../Components/Update/UpdateVehicleCard";
 
+import useAxios from "../Router/hooks/useAxios";
+
 const MyVehicles = () => {
+    const axiosInstance = useAxios();
   const { user } = use(AuthContext);
   const [vehicles, setVehicles] = useState([]);
 
@@ -14,16 +17,17 @@ const MyVehicles = () => {
 
     const fetchMyVehicles = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/vehicles?email=${user.email}`);
-        const data = await res.json();
-        setVehicles(data);
+       axiosInstance.get(`/vehicles?email=${user.email}`)
+       .then(data=>{
+        setVehicles(data.data);
+       })
       } catch (err) {
         console.error("Failed to fetch my vehicles:", err);
       }
     };
 
     fetchMyVehicles();
-  }, [user?.email]);
+  }, [user?.email,axiosInstance]);
 
   return (
     <div>
