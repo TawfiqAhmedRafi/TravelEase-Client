@@ -58,7 +58,22 @@ const Register = () => {
 const handleGoogle=()=>{
     return googleSignIn()
     .then((res)=>{
-      const user = res.user;
+         const user = res.user;
+         const newUser={
+            name : user.displayName,
+            email : user.email,
+            image : user.photoURL
+         }
+        fetch("http://localhost:3000/users",{
+            method:"POST",
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(newUser)
+        }).then(res=>res.json()).then(data=>{
+            console.log("after user", data)
+        })
+     
       
       setUser(user);
        toast.success("Google sign-up successful!");
