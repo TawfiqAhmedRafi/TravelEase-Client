@@ -1,8 +1,9 @@
 import React, { useEffect, useState, use } from "react";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
-import VehicleCard from "../Components/VehicleCard/VehicleCard";
+
 import { AuthContext } from "../Context/AuthContext";
+import UpdateVehicleCard from "../Components/Update/UpdateVehicleCard";
 
 const MyVehicles = () => {
   const { user } = use(AuthContext);
@@ -40,7 +41,7 @@ const MyVehicles = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle._id} vehicle={vehicle} />
+              <UpdateVehicleCard key={vehicle._id} vehicle={vehicle} />
             ))}
           </div>
         )}
