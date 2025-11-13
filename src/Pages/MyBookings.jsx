@@ -3,6 +3,8 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
+import LoadingPage from "./LoadingPage";
+import Swal from "sweetalert2";
 
 const MyBookings = () => {
   const { user } = use(AuthContext);
@@ -29,8 +31,44 @@ const MyBookings = () => {
 
     fetchBookings();
   }, [user]);
+  const handleCancelBooking = async (vehicleId) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to cancel this booking?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, cancel it",
+    cancelButtonText: "No, keep it",
+    reverseButtons: true,
+  });
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (result.isConfirmed) {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/bookings?vehicleId=${vehicleId}&userEmail=${user.email}`,
+        { method: "DELETE" }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        // Remove the cancelled booking from state
+        setBookings((prev) =>
+          prev.filter((booking) => booking.vehicleId !== vehicleId)
+        );
+      } else {
+        toast.error(data.error || "Failed to cancel booking");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  } else {
+    Swal.fire("Cancelled", "Your booking is safe :)", "info");
+  }
+};
+
+  if (loading) return <LoadingPage></LoadingPage>;
 
   return (
     <div className="bg-base-100 min-h-screen">
@@ -87,18 +125,12 @@ const MyBookings = () => {
                   <p className="text-sm text-neutral-content poppins-font">
                     <strong>Username:</strong> {user.displayName}
                   </p>
-
-                  <p
-                    className={`font-semibold mt-2 ${
-                      booking.status === "Booked"
-                        ? "text-info"
-                        : booking.status === "Completed"
-                        ? "text-success"
-                        : "text-error"
-                    } poppins-font`}
+                  <button
+                    onClick={() => handleCancelBooking(booking.vehicleId)}
+                    className="mt-3 px-4 py-2 bg-error text-white rounded-lg hover:bg-red-700 transition-all font-semibold poppins-font"
                   >
-                    Status: {booking.status}
-                  </p>
+                    Cancel Booking
+                  </button>
                 </div>
               </div>
             ))}
