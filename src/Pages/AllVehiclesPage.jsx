@@ -4,15 +4,18 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import VehicleCard from "../Components/VehicleCard/VehicleCard";
 import useAxios from "../Router/hooks/useAxios";
+import { useLocation } from "react-router";
 
 
 const categories = ["All", "SUV", "Sedan", "Sports", "Electric","Hatchback","Hybrid","Van"];
 
 const AllVehiclesPage = () => {
   const axiosInstance = useAxios();
+   const location = useLocation();
+     const initialCategory = location.state?.initialCategory || "";
   const [vehicles, setVehicles] = useState([]);
   const [filters, setFilters] = useState({
-    category: "",
+    category: initialCategory,
     location: "",
     sortBy: "pricePerDay",
     order: "asc",
