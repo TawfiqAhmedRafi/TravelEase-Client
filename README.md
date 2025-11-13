@@ -29,8 +29,8 @@ TravelEase is a modern vehicle booking application that allows users to browse, 
 ---
 
 ## Live Site
-- Live link: [https://travelease-ced9c.web.app/]  
-- Vercel: [https://travel-ease-server-roan.vercel.app/]  
+- Live link: [Visit TravelEase](https://travelease-ced9c.web.app/)
+ 
 
 
 
