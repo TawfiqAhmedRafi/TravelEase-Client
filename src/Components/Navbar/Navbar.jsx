@@ -1,7 +1,27 @@
-import React from "react";
+import React, { use } from "react";
 import { Link, NavLink } from "react-router";
 import logo from  '../../assets/logo.png'
+import { AuthContext } from "../../Context/AuthContext";
+import { toast } from "react-toastify";
 const Navbar = () => {
+    const {user , logOut, loading} = use(AuthContext);
+     const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        toast.success("Logged out successfully!", {
+          position: "top-right",
+          autoClose: 2000, // 2 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const links = (
     <>
       <li>
@@ -62,7 +82,98 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end gap-5">
-        <Link to="/login" className="btn btn-accent">Login</Link>
+        <div className="hidden md:flex gap-5 fredoka-font">
+          {loading ? (
+            <span className="loading loading-bars text-primary loading-xl"></span>
+          ) : user ? (
+            <>
+              <div
+                className="tooltip tooltip-bottom tooltip-secondary font-semibold fredoka-font "
+                data-tip={user.displayName}
+              >
+                <img
+                  src={user.photoURL}
+                  alt="User"
+                  className="w-10 h-10 rounded-full cursor-pointer"
+                />
+              </div>
+              <button
+                onClick={handleLogOut}
+                className="btn btn-primary outline-0 shadow-none"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/auth/login"
+                className="btn btn-primary outline-0 shadow-none"
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/auth/register"
+                className="btn btn-primary outline-0 shadow-none"
+              >
+                Register
+              </NavLink>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Dropdown */}
+
+        <div className="dropdown md:hidden fredoka-font">
+          <label tabIndex={0} className="btn btn-primary outline-0 shadow-none">
+            Menu
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu p-0 shadow bg-base-100 rounded-box mt-2 min-w-max"
+          >
+            {loading ? (
+              <span className="loading loading-bars text-primary loading-xl"></span>
+            ) : user ? (
+              <>
+                {" "}
+                <div className="flex flex-col justify-center items-center gap-3">
+                  <div
+                    className="tooltip tooltip-left tooltip-secondary font-semibold fredoka-font "
+                    data-tip={user.displayName}
+                  >
+                    <img
+                      src={user.photoURL}
+                      alt="User"
+                      className="  w-10 h-10 rounded-full cursor-pointer "
+                    />
+                  </div>
+                  <button
+                    onClick={handleLogOut}
+                    className="btn m-0.5 btn-primary outline-0 shadow-none"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/auth/login"
+                  className="btn btn-primary outline-0 shadow-none"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/auth/register"
+                  className="btn btn-primary outline-0 shadow-none"
+                >
+                  Register
+                </NavLink>
+              </>
+            )}
+          </ul>
+        </div>
        <div>
          <label className="swap swap-rotate cursor-pointer">
   {/* hidden checkbox controls the state */}
