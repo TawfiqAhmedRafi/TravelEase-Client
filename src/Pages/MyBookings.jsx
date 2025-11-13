@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import useAxios from "../Router/hooks/useAxios";
 
 const MyBookings = () => {
-    const axiosInstance = useAxios();
+  const axiosInstance = useAxios();
   const { user } = use(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,11 @@ const MyBookings = () => {
 
     const fetchBookings = async () => {
       try {
-       axiosInstance.get(`/my-bookings-details?email=${user.email}`)
-       .then(data=>{
-        
-        setBookings(data.data);
-       })
-        
+        axiosInstance
+          .get(`/my-bookings-details?email=${user.email}`)
+          .then((data) => {
+            setBookings(data.data);
+          });
       } catch (err) {
         console.error(err);
         toast.error("Failed to fetch bookings");
@@ -34,42 +33,59 @@ const MyBookings = () => {
     };
 
     fetchBookings();
-  }, [user,axiosInstance]);
+  }, [user, axiosInstance]);
 
- const handleCancelBooking = async (vehicleId) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "Do you really want to cancel this booking?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes, cancel it",
-    cancelButtonText: "No, keep it",
-    reverseButtons: true,
-  });
+  const handleCancelBooking = async (vehicleId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to cancel this booking?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, cancel it",
+      cancelButtonText: "No, keep it",
+      reverseButtons: true,
+    });
 
-  if (result.isConfirmed) {
-    try {
-      const { data } = await axiosInstance.delete("/bookings", {
-        params: {
-          vehicleId,
-          userEmail: user.email,
-        },
-      });
+    if (result.isConfirmed) {
+      try {
+        const { data } = await axiosInstance.delete("/bookings", {
+          params: {
+            vehicleId,
+            userEmail: user.email,
+          },
+        });
 
-      toast.success(data.message);
+        toast.success(data.message);
 
-      // Remove the cancelled booking from state
-      setBookings((prev) =>
-        prev.filter((booking) => booking.vehicleId !== vehicleId)
-      );
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.error || "Something went wrong");
+        // Remove the cancelled booking from state
+        setBookings((prev) =>
+          prev.filter((booking) => booking.vehicleId !== vehicleId)
+        );
+      } catch (err) {
+        console.error(err);
+        toast.error(err.response?.data?.error || "Something went wrong");
+      }
+    } else {
+      Swal.fire("Cancelled", "Your booking is safe :)", "info");
     }
-  } else {
-    Swal.fire("Cancelled", "Your booking is safe :)", "info");
-  }
+  };
+  const getTimeLeft = (returnDate) => {
+  const now = new Date();
+  const end = new Date(returnDate);
+
+  let diff = Math.max(0, end - now); // in milliseconds
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  diff -= days * (1000 * 60 * 60 * 24);
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  diff -= hours * (1000 * 60 * 60);
+
+  const minutes = Math.floor(diff / (1000 * 60));
+
+  return { days, hours, minutes };
 };
+
 
   if (loading) return <LoadingPage></LoadingPage>;
 
@@ -104,8 +120,8 @@ const MyBookings = () => {
 
                 {/* Card Content */}
                 <div className="p-5 flex flex-col gap-2">
-                  <h3 className="text-xl font-semibold text-primary poppins-font">
-                    {booking.vehicleInfo.vehicleName}
+                  <h3 className="text-xl font-semibold text-primary fredoka-font">
+                    {booking.vehicleName}
                   </h3>
                   <p className="text-sm text-secondary poppins-font">
                     <strong>Category:</strong> {booking.vehicleInfo.category}
@@ -118,6 +134,19 @@ const MyBookings = () => {
                     <strong>Return Date:</strong>{" "}
                     {new Date(booking.returnDate).toLocaleDateString()}
                   </p>
+                 
+
+                  {(() => {
+                    const { days, hours, minutes } = getTimeLeft(
+                      booking.returnDate
+                    );
+                    return (
+                      <p className="text-sm text-error poppins-font">
+                        <strong className="text-neutral-content">Time Left:</strong> {days}d {hours}h {minutes}m
+                      </p>
+                    );
+                  })()}
+
                   <p className="text-sm text-neutral-content poppins-font">
                     <strong>Owner:</strong> {booking.vehicleInfo.owner}
                   </p>
