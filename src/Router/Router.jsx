@@ -12,6 +12,8 @@ import ErrorPage from '../Pages/ErrorPage';
 import MyVehicles from '../Pages/MyVehicles';
 import MyBookings from '../Pages/MyBookings';
 import PrivateRoute from '../Context/PrivateRoute';
+import ViewDetails from '../Pages/ViewDetails';
+import LoadingPage from '../Pages/LoadingPage';
 
 
 
@@ -66,7 +68,16 @@ const router = createBrowserRouter([
  element :(
     <PrivateRoute><MyBookings></MyBookings></PrivateRoute>
  )
-  
+  },
+  {
+    path : "/vehicles/:id",
+    loader : ({params})=>fetch(`http://localhost:3000/vehicles/${params.id}`),
+    element : (
+        <PrivateRoute>
+            <ViewDetails></ViewDetails>
+        </PrivateRoute>
+    ),
+    hydrateFallbackElement : <LoadingPage></LoadingPage>
   },
   {
     path : "*",
