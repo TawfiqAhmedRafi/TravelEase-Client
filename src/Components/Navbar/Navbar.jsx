@@ -23,25 +23,64 @@ const Navbar = () => {
       });
   };
   const links = (
-    <>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
+  <>
+    <li>
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          isActive ? "border-b-2 border-secondary" : ""
+        }
+      >
+        Home
+      </NavLink>
+    </li>
 
-      <li>
-        <NavLink to="/allVehicles">All Vehicles</NavLink>
-      </li>
-      <li>
-        <NavLink to="/addVehicles">Add Vehicles</NavLink>
-      </li>
-      <li>
-        <NavLink to="/myVehicles">My Vehicles</NavLink>
-      </li>
-      <li>
-        <NavLink to="/bookings">My Bookings</NavLink>
-      </li>
-    </>
-  );
+    <li>
+      <NavLink
+        to="/allVehicles"
+        className={({ isActive }) =>
+          isActive ? "border-b-2 border-secondary" : ""
+        }
+      >
+        All Vehicles
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/addVehicles"
+        className={({ isActive }) =>
+          isActive ? "border-b-2 border-secondary" : ""
+        }
+      >
+        Add Vehicles
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/myVehicles"
+        className={({ isActive }) =>
+          isActive ? "border-b-2 border-secondary" : ""
+        }
+      >
+        My Vehicles
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/bookings"
+        className={({ isActive }) =>
+          isActive ? "border-b-2 border-secondary" : ""
+        }
+      >
+        My Bookings
+      </NavLink>
+    </li>
+  </>
+);
+
   return (
     <div className="navbar bg-base-200 shadow-sm px-5 md:px-8 ">
       <div className="navbar-start">
