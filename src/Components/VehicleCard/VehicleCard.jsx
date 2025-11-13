@@ -25,7 +25,7 @@ const VehicleCard = ({ vehicle }) => {
 
   // Determine button state and label
   const isBooked = availability.toLowerCase() === "booked";
-  const buttonLabel = isBooked ? "Booked" : "Book Now";
+ 
 
   return (
     <div
@@ -82,12 +82,7 @@ const VehicleCard = ({ vehicle }) => {
         {/* Description (2 lines) */}
         <p className="text-sm mt-2 text-gray-500 dark:text-gray-400 line-clamp-2">
           {description} </p>
-           <Link
-            to={`/vehicles/${_id}`}
-            className="text-secondary font-semibold hover:underline hover:text-accent transition-colors duration-200 cursor-pointer"
-          >
-            View More
-          </Link>
+          
           
        
 
@@ -107,19 +102,15 @@ const VehicleCard = ({ vehicle }) => {
 
         {/* Conditional Button */}
         <div className="card-actions justify-end mt-3">
-          <button
-            className={`
-              btn btn-sm border-none text-white 
-              ${
-                isBooked
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-linear-to-r from-primary via-accent to-secondary hover:brightness-110 shadow-md hover:shadow-lg"
-              }
-              rounded-full px-5
-            `}
-            disabled={isBooked}
+          <button className="btn w-full  bg-linear-to-r from-primary via-accent to-secondary hover:brightness-110 shadow-md hover:shadow-lg border-none text-white "
+            
           >
-            {buttonLabel}
+            <Link
+            to={`/vehicles/${_id}`}
+            className="text-secondary font-semibold hover:underline hover:text-white transition-colors duration-200 cursor-pointer"
+          >
+            View More
+          </Link>
           </button>
         </div>
       </div>

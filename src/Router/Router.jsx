@@ -1,40 +1,35 @@
-import React from 'react';
+import React from "react";
 import { createBrowserRouter } from "react-router";
-import RootLayout from '../Layouts/RootLayout';
-import Home from '../Components/Home/Home';
-import AllVehiclesPage from '../Pages/AllVehiclesPage';
-import AddVehicles from '../Pages/AddVehicles';
-import AuthLayout from '../Layouts/AuthLayout';
-import Login from '../Components/Login/Login';
-import Register from '../Register/Register';
-import ForgetPass from '../Pages/ForgetPass';
-import ErrorPage from '../Pages/ErrorPage';
-import MyVehicles from '../Pages/MyVehicles';
-import MyBookings from '../Pages/MyBookings';
-import PrivateRoute from '../Context/PrivateRoute';
-import ViewDetails from '../Pages/ViewDetails';
-import LoadingPage from '../Pages/LoadingPage';
-
-
+import RootLayout from "../Layouts/RootLayout";
+import Home from "../Components/Home/Home";
+import AllVehiclesPage from "../Pages/AllVehiclesPage";
+import AddVehicles from "../Pages/AddVehicles";
+import AuthLayout from "../Layouts/AuthLayout";
+import Login from "../Components/Login/Login";
+import Register from "../Register/Register";
+import ForgetPass from "../Pages/ForgetPass";
+import ErrorPage from "../Pages/ErrorPage";
+import MyVehicles from "../Pages/MyVehicles";
+import MyBookings from "../Pages/MyBookings";
+import PrivateRoute from "../Context/PrivateRoute";
+import ViewDetails from "../Pages/ViewDetails";
+import LoadingPage from "../Pages/LoadingPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: RootLayout,
-   children: [
-    {
-        index: true ,
+    children: [
+      {
+        index: true,
         Component: Home,
-    },
-    {
-        path: "/allVehicles",
-        Component: AllVehiclesPage
-    },
-    {
+      },
+
+      {
         path: "/addVehicles",
-        Component : AddVehicles,
-    }
-   ]
+        Component: AddVehicles,
+      },
+    ],
   },
   {
     path: "/auth",
@@ -52,36 +47,45 @@ const router = createBrowserRouter([
         path: "/auth/forgetpass",
         element: <ForgetPass></ForgetPass>,
       },
-      
     ],
   },
   {
-    path : "/myVehicles",
-    element:(
-        <PrivateRoute> <MyVehicles></MyVehicles></PrivateRoute>
-    )
-    
-
-  },
-  {
- path : "/bookings",
- element :(
-    <PrivateRoute><MyBookings></MyBookings></PrivateRoute>
- )
-  },
-  {
-    path : "/vehicles/:id",
-    loader : ({params})=>fetch(`http://localhost:3000/vehicles/${params.id}`),
-    element : (
-        <PrivateRoute>
-            <ViewDetails></ViewDetails>
-        </PrivateRoute>
+    path: "/myVehicles",
+    element: (
+      <PrivateRoute>
+        {" "}
+        <MyVehicles></MyVehicles>
+      </PrivateRoute>
     ),
-    hydrateFallbackElement : <LoadingPage></LoadingPage>
   },
   {
-    path : "*",
-    element : <ErrorPage></ErrorPage>
-  }
+    path: "/allVehicles",
+    loader: () => fetch("http://localhost:3000/vehicles"),
+    Component: AllVehiclesPage,
+     hydrateFallbackElement: <LoadingPage></LoadingPage>,
+  },
+  {
+    path: "/bookings",
+    element: (
+      <PrivateRoute>
+        <MyBookings></MyBookings>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/vehicles/:id",
+    loader: ({ params }) =>
+      fetch(`http://localhost:3000/vehicles/${params.id}`),
+    element: (
+      <PrivateRoute>
+        <ViewDetails></ViewDetails>
+      </PrivateRoute>
+    ),
+    hydrateFallbackElement: <LoadingPage></LoadingPage>,
+  },
+  {
+    path: "*",
+    element: <ErrorPage></ErrorPage>,
+  },
 ]);
-export default router
+export default router;

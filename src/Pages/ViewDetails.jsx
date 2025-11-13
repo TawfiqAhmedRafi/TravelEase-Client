@@ -1,15 +1,66 @@
-import React from "react";
+import React, { use, useRef, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
-import { FaMapMarkerAlt, FaUsers, FaEnvelope, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaUsers,
+  FaEnvelope,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import { format } from "date-fns";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
+import { AuthContext } from "../Context/AuthContext";
+import Swal from "sweetalert2";
 
 const ViewDetails = () => {
-  const vehicle = useLoaderData();
+  const loadedVehicle = useLoaderData();
+  const [vehicle, setVehicle] = useState(loadedVehicle);
+  const bookingModalRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = use(AuthContext);
+
+  const handleBookingModalOpen = () => {
+    bookingModalRef.current.showModal();
+  };
+
+  const handleBookingSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const email = form.email.value;
+    const days = form.days.value;
+    const carName = form.carName.value;
+    const newBooking = {
+      vehicleId: _id,
+      vehicleName: carName,
+      userEmail: email,
+      bookFor: days,
+    };
+    fetch("http://localhost:3000/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newBooking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("after book", data);
+         bookingModalRef.current.close();
+         setVehicle((prev) => ({ ...prev, availability: "Booked" }));
+        Swal.fire({
+      title: "Success!",
+      text: `${carName} is booked  successfully for ${days} days.`,
+      icon: "success",
+      button: "OK",
+    });
+
+      });
+       
+  };
 
   const {
+    _id,
     vehicleName,
     owner,
     userEmail,
@@ -64,7 +115,9 @@ const ViewDetails = () => {
                 <span className="badge bg-secondary text-secondary-content px-4 py-2">
                   {category}
                 </span>
-                <span className="text-warning font-medium capitalize">{fuelType}</span>
+                <span className="text-warning font-medium capitalize">
+                  {fuelType}
+                </span>
               </div>
 
               {/* Location */}
@@ -93,7 +146,9 @@ const ViewDetails = () => {
               <div className="flex flex-wrap gap-6 mb-4">
                 <div className="flex items-center gap-2 flex-1 min-w-[150px]">
                   <span className="font-semibold">Price/day:</span>
-                  <span className="text-secondary font-bold">৳{pricePerDay}</span>
+                  <span className="text-secondary font-bold">
+                    ৳{pricePerDay}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 flex-1 min-w-[150px]">
                   <FaUsers className="text-accent" />
@@ -119,6 +174,7 @@ const ViewDetails = () => {
             {/* Action Buttons */}
             <div className="mt-8 flex justify-between flex-wrap gap-4">
               <button
+                onClick={handleBookingModalOpen}
                 className={`btn btn-sm text-white font-semibold rounded-full px-6 py-2 transition-all duration-300 ${
                   isBooked
                     ? "bg-gray-500 cursor-not-allowed"
@@ -138,6 +194,70 @@ const ViewDetails = () => {
             </div>
           </div>
         </div>
+
+        <dialog
+          ref={bookingModalRef}
+          className="modal modal-bottom sm:modal-middle"
+        >
+          <div className="modal-box">
+            <h3 className="font-bold text-lg text-center text-accent">
+              Book The Vehicle
+            </h3>
+
+            <form onSubmit={handleBookingSubmit}>
+              <fieldset className="fieldset">
+                <label className="label">Name</label>
+                <input
+                  required
+                  type="text"
+                  name="name"
+                  className="input w-full"
+                  defaultValue={user.displayName}
+                />
+                <label className="label">Email</label>
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  className="input w-full"
+                  defaultValue={user.email}
+                  readOnly
+                />
+
+                <label className="label">Vehicle Name</label>
+                <input
+                  type="text"
+                  className="input w-full"
+                  name="carName"
+                  defaultValue={vehicleName}
+                  required
+                  readOnly
+                />
+
+                <label className="label">Book For</label>
+                <input
+                  type="number"
+                  className="input w-full"
+                  placeholder="Days"
+                  name="days"
+                  required
+                  min={1}
+                  step={1}
+                />
+
+                <button className="btn btn-sm text-white font-semibold rounded-full px-6 py-2 transition-all duration-300mt-4 bg-linear-to-r from-primary via-accent to-secondary shadow-md ">
+                  Book Now
+                </button>
+              </fieldset>
+            </form>
+
+            <div className="">
+              <form method="dialog">
+                <button className="btn w-full mt-4">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
       </main>
 
       <footer>
