@@ -64,7 +64,7 @@ const TopCategories = () => {
       <h2 className="text-3xl font-bold text-center mb-10 fredoka-font text-primary">
         Top Categories
       </h2>
-      <p className="text-center text-gray-500 mb-6">
+      <p className="text-center text-accent mb-6">
         Explore the top cars in each category. Click any car to see all vehicles
         of this type.
       </p>

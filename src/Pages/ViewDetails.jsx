@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 
 import useAxios from "../Router/hooks/useAxios";
 
+
 const ViewDetails = () => {
   const axiosInstance = useAxios();
   const loadedVehicle = useLoaderData();
@@ -25,6 +26,8 @@ const ViewDetails = () => {
   const handleBookingModalOpen = () => {
     bookingModalRef.current.showModal();
   };
+    
+
 
  const handleBookingSubmit = async (e) => {
   e.preventDefault();
@@ -79,7 +82,7 @@ const ViewDetails = () => {
     userEmail,
     category,
     pricePerDay,
-    location,
+    location:vehicleLocation,
     availability,
     description,
     coverImage,
@@ -136,7 +139,7 @@ const ViewDetails = () => {
               {/* Location */}
               <div className="flex items-center gap-2 text-gray-500 dark:text-gray-300 mb-6">
                 <FaMapMarkerAlt className="text-accent" />
-                <span className="font-medium">{location}</span>
+                <span className="font-medium">{vehicleLocation}</span>
               </div>
 
               {/* Description */}
@@ -199,7 +202,9 @@ const ViewDetails = () => {
               </button>
 
               <button
-                onClick={() => navigate(-1)}
+                onClick={()=>{
+                  navigate("/allVehicles")
+                }}
                 className="btn btn-sm border-2 border-secondary text-secondary font-semibold rounded-full px-6 py-2 transition-all duration-300 hover:bg-secondary hover:text-white hover:shadow-md"
               >
                 Go Back
