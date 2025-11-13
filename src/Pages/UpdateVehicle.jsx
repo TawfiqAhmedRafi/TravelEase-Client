@@ -17,10 +17,9 @@ const UpdateVehicle = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        axiosInstance.get(`/vehicles/${id}`)
-        .then(data=>{
-            setVehicle(data.data);
-        })
+        axiosInstance.get(`/vehicles/${id}`).then((data) => {
+          setVehicle(data.data);
+        });
       } catch (err) {
         console.error(err);
         toast.error(err.message || "Failed to fetch vehicle data");
@@ -29,41 +28,44 @@ const UpdateVehicle = () => {
       }
     };
     fetchVehicle();
-  }, [id,axiosInstance]);
-
+  }, [id, axiosInstance]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVehicle((prev) => ({ ...prev, [name]: value }));
   };
 
- const handleUpdate = async (e) => {
-  e.preventDefault();
-  if (!vehicle) return;
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!vehicle) return;
 
-  try {
-    const updatedData = {
-      vehicleName: vehicle.vehicleName,
-      category: vehicle.category,
-      fuelType: vehicle.fuelType,
-      pricePerDay: vehicle.pricePerDay,
-      location: vehicle.location,
-      description: vehicle.description,
-      coverImage: vehicle.coverImage, // included coverImage
-    };
+    try {
+      const updatedData = {
+        vehicleName: vehicle.vehicleName,
+        category: vehicle.category,
+        fuelType: vehicle.fuelType,
+        pricePerDay: parseFloat(vehicle.pricePerDay),
+        location: vehicle.location,
+        description: vehicle.description,
+        coverImage: vehicle.coverImage, 
+      };
 
-    // Axios PATCH request
-    const { data } = await axiosInstance.patch(`/vehicles/${id}`, updatedData);
+     
+      const { data } = await axiosInstance.patch(
+        `/vehicles/${id}`,
+        updatedData
+      );
 
-    toast.success("Vehicle updated successfully!");
-    navigate("/myVehicles");
-  } catch (err) {
-    console.error(err);
-    toast.error(err.response?.data?.error || "Something went wrong");
-  }
-};
+      toast.success("Vehicle updated successfully!");
+      navigate("/myVehicles");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.error || "Something went wrong");
+    }
+  };
   if (loading) return <LoadingPage></LoadingPage>;
-  if (!vehicle) return <div className="text-center py-20">Vehicle not found.</div>;
+  if (!vehicle)
+    return <div className="text-center py-20">Vehicle not found.</div>;
 
   return (
     <div className="bg-base-100 min-h-screen">
@@ -85,14 +87,22 @@ const UpdateVehicle = () => {
             placeholder="Vehicle Name"
             className="input input-bordered w-full"
           />
-          <input
-            type="text"
+          <select
             name="category"
             value={vehicle.category || ""}
             onChange={handleChange}
-            placeholder="Category"
-            className="input input-bordered w-full"
-          />
+            className="p-3 rounded-xl border border-base-300 bg-base-100 focus:outline-none focus:ring-2 focus:ring-secondary"
+          >
+            <option value="">Select Category</option>
+            <option value="SUV">SUV</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Sports">Sports</option>
+            <option value="Electric">Electric</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Van">Van</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+
           <input
             type="text"
             name="fuelType"

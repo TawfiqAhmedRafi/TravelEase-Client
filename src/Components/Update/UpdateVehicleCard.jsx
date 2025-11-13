@@ -2,8 +2,12 @@ import React from "react";
 import { FaMapMarkerAlt, FaUsers } from "react-icons/fa";
 import { format } from "date-fns";
 import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import useAxios from "../../Router/hooks/useAxios";
 
-const UpdateVehicleCard = ({ vehicle }) => {
+const UpdateVehicleCard = ({ vehicle, removeVehicle }) => {
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
   const {
     _id,
@@ -28,6 +32,30 @@ const UpdateVehicleCard = ({ vehicle }) => {
 
   const handleUpdate = () => {
     navigate(`/update-vehicle/${_id}`);
+  };
+  const handleDelete = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action will permanently delete the vehicle!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axiosInstance.delete(`/vehicles/${_id}`);
+          toast.success("Vehicle deleted successfully!");
+
+          if (removeVehicle) removeVehicle(_id);
+        } catch (err) {
+          console.error(err);
+          toast.error(err.response?.data?.error || "Failed to delete vehicle");
+        }
+      }
+    });
   };
 
   return (
@@ -106,13 +134,20 @@ const UpdateVehicleCard = ({ vehicle }) => {
             </Link>
           </button>
 
-          {/* Green Update Button */}
-          <button
-            onClick={handleUpdate}
-            className="btn w-full bg-success text-white border-none hover:brightness-110 shadow-md hover:shadow-lg"
-          >
-            Update Vehicle
-          </button>
+          <div className="flex w-full gap-2">
+            <button
+              onClick={handleUpdate}
+              className="w-[49%] btn bg-success text-white border-none hover:brightness-110 shadow-md hover:shadow-lg"
+            >
+              Update vehicle
+            </button>
+            <button
+              onClick={handleDelete}
+              className="w-[49%] btn bg-error text-white border-none hover:brightness-110 shadow-md hover:shadow-lg"
+            >
+              Delete vehicle
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -28,6 +28,9 @@ const MyVehicles = () => {
 
     fetchMyVehicles();
   }, [user?.email,axiosInstance]);
+  const removeVehicle = (id) => {
+    setVehicles((prev) => prev.filter((v) => v._id !== id));
+  };
 
   return (
     <div>
@@ -45,7 +48,7 @@ const MyVehicles = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {vehicles.map((vehicle) => (
-              <UpdateVehicleCard key={vehicle._id} vehicle={vehicle} />
+              <UpdateVehicleCard key={vehicle._id} removeVehicle={removeVehicle} vehicle={vehicle} />
             ))}
           </div>
         )}

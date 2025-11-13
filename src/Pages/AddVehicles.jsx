@@ -41,6 +41,7 @@ const AddVehicles = () => {
     const { data } = await axiosInstance.post("/vehicles", {
       ...vehicle,
       owner: user.displayName,
+    pricePerDay: parseFloat(vehicle.pricePerDay),
       userEmail: user.email,
       createdAt: new Date(),
     });
@@ -105,6 +106,9 @@ const AddVehicles = () => {
             <option value="Sedan">Sedan</option>
             <option value="Sports">Sports</option>
             <option value="Electric">Electric</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Van">Van</option>
+            <option value="Hybrid">Hybrid</option>
           </select>
 
           <input
