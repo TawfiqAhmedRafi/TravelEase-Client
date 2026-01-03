@@ -30,24 +30,31 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-       path: "aboutUs",
+        path: "aboutUs",
         Component: AboutUs,
       },
       {
-       path: "aboutUs",
+        path: "aboutUs",
         Component: AboutUs,
       },
       {
-       path: "privacy-policy",
+        path: "privacy-policy",
         Component: PrivacyPolicy,
       },
       {
-       path: "terms-and-conditions",
+        path: "terms-and-conditions",
         Component: TermsAndConditions,
       },
       {
-       path: "contact",
+        path: "contact",
         Component: Contact,
+      },
+      {
+        path: "allVehicles",
+        loader: () =>
+          fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
+        Component: AllVehiclesPage,
+        hydrateFallbackElement: <LoadingPage></LoadingPage>,
       },
     ],
   },
@@ -79,12 +86,7 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
-  {
-    path: "/allVehicles",
-    loader: () => fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
-    Component: AllVehiclesPage,
-    hydrateFallbackElement: <LoadingPage></LoadingPage>,
-  },
+
   {
     path: "/addVehicles",
     element: (

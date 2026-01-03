@@ -70,9 +70,7 @@ const AllVehiclesPage = () => {
 
   return (
     <div>
-      <header>
-        <Navbar />
-      </header>
+     
       <main className="py-5 md:py-10 px-5 md:px-8">
         <h2 className="text-3xl md:text-5xl font-semibold text-primary text-center mb-5 poppins-font">
           All <span className="text-secondary">Vehicles</span>
@@ -161,9 +159,7 @@ const AllVehiclesPage = () => {
           onPageChange={setPage}
         />
       </main>
-      <footer>
-        <Footer />
-      </footer>
+     
     </div>
   );
 };

@@ -8,7 +8,7 @@ import TopCategories from '../Components/TopCategories/TopCategories';
 const RootLayout = () => {
     return (
         <div className=''>
-            <header className=''>
+            <header className="sticky top-0 z-10">
             <Navbar></Navbar>
             </header>
            <main className='px-5 md:px-8 my-10'>
