@@ -11,9 +11,7 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
-
 import useAxios from "../Router/hooks/useAxios";
-
 
 const ViewDetails = () => {
   const axiosInstance = useAxios();
@@ -22,59 +20,6 @@ const ViewDetails = () => {
   const bookingModalRef = useRef(null);
   const navigate = useNavigate();
   const { user } = use(AuthContext);
-
-  const handleBookingModalOpen = () => {
-    bookingModalRef.current.showModal();
-  };
-    
-
-
- const handleBookingSubmit = async (e) => {
-  e.preventDefault();
-  const form = e.target;
-
-  const email = form.email.value;
-  const days = form.days.value;
-  const carName = form.carName.value;
-
-  const newBooking = {
-    vehicleId: _id,
-    vehicleName: carName,
-    userEmail: email,
-    bookFor: days,
-  };
-
-  try {
-
-    const { data } = await axiosInstance.post("/bookings", newBooking);
-
-    
-
-    bookingModalRef.current.close();
-
-  
-    setVehicle((prev) => ({ ...prev, availability: "Booked" }));
-
-   
-    Swal.fire({
-      title: "Success!",
-      text: `${carName} is booked successfully for ${days} days.`,
-      icon: "success",
-      button: "OK",
-    });
-  } catch (error) {
-    console.error("Booking failed", error);
-
-    // Show error message
-    Swal.fire({
-      title: "Error!",
-      text: "Failed to book the vehicle. Please try again.",
-      icon: "error",
-      button: "OK",
-    });
-  }
-};
-
   const {
     _id,
     vehicleName,
@@ -82,7 +27,7 @@ const ViewDetails = () => {
     userEmail,
     category,
     pricePerDay,
-    location:vehicleLocation,
+    location: vehicleLocation,
     availability,
     description,
     coverImage,
@@ -90,6 +35,76 @@ const ViewDetails = () => {
     seatCapacity,
     createdAt,
   } = vehicle;
+
+  const handleBookingModalOpen = () => {
+    bookingModalRef.current.showModal();
+  };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const email = form.email.value;
+    let days = Number(form.days.value) || 0;
+    let hours = Number(form.hours.value) || 0;
+
+   
+    if (days === 0 && hours === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Booking",
+        text: "Please enter days or hours (at least one must be greater than 0)",
+      });
+      return;
+    }
+
+    const carName = form.carName.value;
+    if (!days && !hours) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please enter either days or hours",
+      });
+      return;
+    }
+
+    const newBooking = {
+      vehicleId: _id,
+      vehicleName: carName,
+      userEmail: email,
+    };
+
+    if (days) newBooking.bookFor = Number(days);
+    if (hours) newBooking.bookForHours = Number(hours);
+
+    try {
+      const { data } = await axiosInstance.post("/bookings", newBooking);
+
+      bookingModalRef.current.close();
+
+      setVehicle((prev) => ({ ...prev, availability: "Booked" }));
+
+      Swal.fire({
+        title: "Success!",
+        text: `${carName} is booked successfully for ${
+          days ? days + " days" : hours + " hours"
+        }.`,
+
+        icon: "success",
+        button: "OK",
+      });
+    } catch (error) {
+      console.error("Booking failed", error);
+
+      
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to book the vehicle. Please try again.",
+        icon: "error",
+        button: "OK",
+      });
+    }
+  };
 
   const formattedDate = createdAt
     ? format(new Date(createdAt), "dd MMM yyyy")
@@ -202,8 +217,8 @@ const ViewDetails = () => {
               </button>
 
               <button
-                onClick={()=>{
-                  navigate("/allVehicles")
+                onClick={() => {
+                  navigate("/allVehicles");
                 }}
                 className="btn btn-sm border-2 border-secondary text-secondary font-semibold rounded-full px-6 py-2 transition-all duration-300 hover:bg-secondary hover:text-white hover:shadow-md"
               >
@@ -252,16 +267,31 @@ const ViewDetails = () => {
                   readOnly
                 />
 
-                <label className="label">Book For</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="Days"
-                  name="days"
-                  required
-                  min={1}
-                  step={1}
-                />
+                <div className="flex gap-4">
+                  {/* Days Input */}
+                  <div className="flex-1">
+                    <label className="label">Days</label>
+                    <input
+                      type="number"
+                      className="input w-full"
+                      placeholder="Optional"
+                      name="days"
+                      min={0}
+                    />
+                  </div>
+
+                  {/* Hours Input */}
+                  <div className="flex-1">
+                    <label className="label">Hours</label>
+                    <input
+                      type="number"
+                      className="input w-full"
+                      placeholder="Optional"
+                      name="hours"
+                      min={0}
+                    />
+                  </div>
+                </div>
 
                 <button className="btn btn-sm text-white font-semibold rounded-full px-6 py-2 transition-all duration-300mt-4 bg-linear-to-r from-primary via-accent to-secondary shadow-md ">
                   Book Now

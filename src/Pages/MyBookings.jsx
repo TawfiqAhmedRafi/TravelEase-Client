@@ -14,26 +14,26 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
+ useEffect(() => {
+  if (!user) return;
 
-    const fetchBookings = async () => {
-      try {
-        axiosInstance
-          .get(`/my-bookings-details?email=${user.email}`)
-          .then((data) => {
-            setBookings(data.data);
-          });
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to fetch bookings");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchBookings = async () => {
+    try {
+      const { data } = await axiosInstance.get(`/my-bookings-details?email=${user.email}`);
+      setBookings(data);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchBookings();
-  }, [user, axiosInstance]);
+  fetchBookings();
+  const interval = setInterval(fetchBookings, 15000); // refresh every 15s
+  return () => clearInterval(interval);
+}, [user, axiosInstance]);
+
 
   const handleCancelBooking = async (vehicleId) => {
     const result = await Swal.fire({
@@ -57,7 +57,7 @@ const MyBookings = () => {
 
         toast.success(data.message);
 
-        // Remove the cancelled booking from state
+        // Remove cancelled booking from state
         setBookings((prev) =>
           prev.filter((booking) => booking.vehicleId !== vehicleId)
         );
@@ -69,25 +69,29 @@ const MyBookings = () => {
       Swal.fire("Cancelled", "Your booking is safe :)", "info");
     }
   };
+
+  // Time left calculator
   const getTimeLeft = (returnDate) => {
-  const now = new Date();
-  const end = new Date(returnDate);
+    const now = new Date();
+    const end = new Date(returnDate);
 
-  let diff = Math.max(0, end - now); // in milliseconds
+    let diff = Math.max(0, end - now); // in milliseconds
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  diff -= days * (1000 * 60 * 60 * 24);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    diff -= days * (1000 * 60 * 60 * 24);
 
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  diff -= hours * (1000 * 60 * 60);
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    diff -= hours * (1000 * 60 * 60);
 
-  const minutes = Math.floor(diff / (1000 * 60));
+    const minutes = Math.floor(diff / (1000 * 60));
 
-  return { days, hours, minutes };
-};
+    return { days, hours, minutes };
+  };
 
+  if (loading) return <LoadingPage />;
 
-  if (loading) return <LoadingPage></LoadingPage>;
+  // Filter out completed bookings
+  const activeBookings = bookings.filter((b) => b.status === "Booked");
 
   return (
     <div className="bg-base-100 min-h-screen">
@@ -100,13 +104,13 @@ const MyBookings = () => {
           My <span className="text-secondary">Bookings</span>
         </h2>
 
-        {bookings.length === 0 ? (
+        {activeBookings.length === 0 ? (
           <p className="text-center text-gray-500 poppins-font">
-            You have no bookings yet.
+            You have no active bookings.
           </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {bookings.map((booking) => (
+            {activeBookings.map((booking) => (
               <div
                 key={booking._id}
                 className="bg-base-200 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all"
@@ -134,15 +138,16 @@ const MyBookings = () => {
                     <strong>Return Date:</strong>{" "}
                     {new Date(booking.returnDate).toLocaleDateString()}
                   </p>
-                 
 
+                  {/* Countdown Timer */}
                   {(() => {
                     const { days, hours, minutes } = getTimeLeft(
                       booking.returnDate
                     );
                     return (
                       <p className="text-sm text-error poppins-font">
-                        <strong className="text-neutral-content">Time Left:</strong> {days}d {hours}h {minutes}m
+                        <strong className="text-neutral-content">Time Left:</strong>{" "}
+                        {days}d {hours}h {minutes}m
                       </p>
                     );
                   })()}
@@ -151,8 +156,7 @@ const MyBookings = () => {
                     <strong>Owner:</strong> {booking.vehicleInfo.owner}
                   </p>
                   <p className="text-sm text-neutral-content poppins-font">
-                    <strong>Owner Email:</strong>{" "}
-                    {booking.vehicleInfo.userEmail}
+                    <strong>Owner Email:</strong> {booking.vehicleInfo.userEmail}
                   </p>
                   <p className="text-sm text-neutral-content poppins-font">
                     <strong>Username:</strong> {user.displayName}

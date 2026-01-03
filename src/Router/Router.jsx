@@ -70,8 +70,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path : "/update-vehicle/:id",
-    element: <PrivateRoute><UpdateVehicle></UpdateVehicle></PrivateRoute>
+    path: "/update-vehicle/:id",
+    element: (
+      <PrivateRoute>
+        <UpdateVehicle></UpdateVehicle>
+      </PrivateRoute>
+    ),
   },
   {
     path: "/bookings",
@@ -85,11 +89,7 @@ const router = createBrowserRouter([
     path: "/vehicles/:id",
     loader: ({ params }) =>
       fetch(`https://travel-ease-server-roan.vercel.app/vehicles/${params.id}`),
-    element: (
-      <PrivateRoute>
-        <ViewDetails></ViewDetails>
-      </PrivateRoute>
-    ),
+    element: <ViewDetails></ViewDetails>,
     hydrateFallbackElement: <LoadingPage></LoadingPage>,
   },
   {

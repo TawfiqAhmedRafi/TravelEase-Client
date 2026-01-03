@@ -47,7 +47,8 @@ const UpdateVehicle = () => {
         pricePerDay: parseFloat(vehicle.pricePerDay),
         location: vehicle.location,
         description: vehicle.description,
-        coverImage: vehicle.coverImage, 
+        coverImage: vehicle.coverImage,
+        seatCapacity: vehicle.seatCapacity, 
       };
 
      
@@ -125,6 +126,14 @@ const UpdateVehicle = () => {
             value={vehicle.location || ""}
             onChange={handleChange}
             placeholder="Location"
+            className="input input-bordered w-full"
+          />
+          <input
+            type="text"
+            name="seatCapacity"
+            value={vehicle.seatCapacity || ""}
+            onChange={handleChange}
+            placeholder="Seating Capacity"
             className="input input-bordered w-full"
           />
           <input
