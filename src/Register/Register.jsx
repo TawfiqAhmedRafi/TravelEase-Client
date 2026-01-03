@@ -1,113 +1,110 @@
-import React, { use, useState } from 'react';
-import Navbar from '../Components/Navbar/Navbar';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
-import Footer from '../Components/Footer/Footer';
-import { AuthContext } from '../Context/AuthContext';
-import { toast } from 'react-toastify';
-import { useNavigate , Link } from 'react-router';
+import React, { use, useState } from "react";
+import Navbar from "../Components/Navbar/Navbar";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import Footer from "../Components/Footer/Footer";
+import { AuthContext } from "../Context/AuthContext";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router";
 
-import useAxios from '../Router/hooks/useAxios';
+import useAxios from "../Router/hooks/useAxios";
 
 const Register = () => {
+  const { createUser, setUser, googleSignIn, updateUser } = use(AuthContext);
+  const axiosInstance = useAxios();
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const navigate = useNavigate();
 
-      const { createUser, setUser,  googleSignIn ,updateUser} = use(AuthContext);
-     const axiosInstance = useAxios();
-    const [showPassword,setShowPassword]=useState(false);
-     const [passwordError, setPasswordError] = useState("");
-     const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const photo = form.photo.value;
+    const email = form.email.value;
+    const password = form.password.value;
 
-  const form = e.target;
-  const name = form.name.value;
-  const photo = form.photo.value;
-  const email = form.email.value;
-  const password = form.password.value;
+    const uppercasePattern = /[A-Z]/;
+    const lowercasePattern = /[a-z]/;
 
-  const uppercasePattern = /[A-Z]/;
-  const lowercasePattern = /[a-z]/;
+    // Password validations
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return;
+    }
+    if (!uppercasePattern.test(password)) {
+      setPasswordError("Password must contain at least one uppercase letter.");
+      return;
+    }
+    if (!lowercasePattern.test(password)) {
+      setPasswordError("Password must contain at least one lowercase letter.");
+      return;
+    }
 
-  // Password validations
-  if (password.length < 6) {
-    setPasswordError("Password must be at least 6 characters long.");
-    return;
-  }
-  if (!uppercasePattern.test(password)) {
-    setPasswordError("Password must contain at least one uppercase letter.");
-    return;
-  }
-  if (!lowercasePattern.test(password)) {
-    setPasswordError("Password must contain at least one lowercase letter.");
-    return;
-  }
-
-  try {
-    // Create user with auth
-    const res = await createUser(email, password);
-    const user = res.user;
-
-    // Update user profile
-    await updateUser({ displayName: name, photoURL: photo });
-
-    // Save user in state
-    setUser({ ...user, displayName: name, photoURL: photo });
-
-    // Prepare new user data for backend
-    const newUser = {
-      name,
-      email,
-      image: photo,
-    };
-
-    // Save user to backend
-    const { data } = await axiosInstance.post("/users", newUser);
-    
-
-    toast.success("Sign-up successful!");
-    navigate("/");
-  } catch (error) {
-    console.error(error);
-    toast.error(error.message || "Sign-up failed!");
-  }
-};
-const handleGoogle = () => {
-  return googleSignIn()
-    .then(async (res) => {
+    try {
+      // Create user with auth
+      const res = await createUser(email, password);
       const user = res.user;
 
+      // Update user profile
+      await updateUser({ displayName: name, photoURL: photo });
+
+      // Save user in state
+      setUser({ ...user, displayName: name, photoURL: photo });
+
+      // Prepare new user data for backend
       const newUser = {
-        name: user.displayName,
-        email: user.email,
-        image: user.photoURL,
+        name,
+        email,
+        image: photo,
       };
 
-      try {
-        // Axios automatically sets Content-Type for JSON
-        const { data } = await axiosInstance.post("/users", newUser);
-       
-      } catch (error) {
-        console.error("Failed to save user", error);
-        toast.error("Failed to save user info.");
-      }
+      // Save user to backend
+      const { data } = await axiosInstance.post("/users", newUser);
 
-      setUser(user);
-      toast.success("Google sign-up successful!");
+      toast.success("Sign-up successful!");
       navigate("/");
-    })
-    .catch((error) => {
-      const errorMessage = error.message;
-      toast(errorMessage);
-    });
-};
-    return (
-         <div>
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Sign-up failed!");
+    }
+  };
+  const handleGoogle = () => {
+    return googleSignIn()
+      .then(async (res) => {
+        const user = res.user;
+
+        const newUser = {
+          name: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        };
+
+        try {
+          // Axios automatically sets Content-Type for JSON
+          const { data } = await axiosInstance.post("/users", newUser);
+        } catch (error) {
+          console.error("Failed to save user", error);
+          toast.error("Failed to save user info.");
+        }
+
+        setUser(user);
+        toast.success("Google sign-up successful!");
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        toast(errorMessage);
+      });
+  };
+  return (
+    <div>
       <header>
         <Navbar></Navbar>
       </header>
       <main>
-        <div className=" hero bg-base-100 min-h-screen">
+        <div className=" hero bg-base-100 ">
           <div className="hero-content flex-col lg:flex-row-reverse">
             <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl px-2 py-5">
               <h2 className="text-2xl font-semibold text-center">
@@ -146,21 +143,26 @@ const handleGoogle = () => {
                   {/* pass */}
                   <label className="label">Password</label>
                   <div className="relative">
-                     <input
-                    name="password"
-                    type={showPassword? 'text':'password'}
-                    className="input"
-                    placeholder="Password"
-                    required
-                  />
-                  <button onClick={()=>setShowPassword(!showPassword)}
-                   type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary focus:outline-none">
-                    {showPassword?<FaEye></FaEye>:<FaEyeSlash></FaEyeSlash>}
-                    
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      className="input"
+                      placeholder="Password"
+                      required
+                    />
+                    <button
+                      onClick={() => setShowPassword(!showPassword)}
+                      type="button"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary focus:outline-none"
+                    >
+                      {showPassword ? (
+                        <FaEye></FaEye>
+                      ) : (
+                        <FaEyeSlash></FaEyeSlash>
+                      )}
                     </button>
-
                   </div>
-                 
+
                   {passwordError && (
                     <p className="text-accent text-sm mt-1">{passwordError}</p>
                   )}
@@ -170,7 +172,11 @@ const handleGoogle = () => {
                   </button>
                 </fieldset>
 
-                <button type="button" onClick={handleGoogle} className="btn btn-secondary btn-outline w-full ">
+                <button
+                  type="button"
+                  onClick={handleGoogle}
+                  className="btn btn-secondary btn-outline w-full "
+                >
                   <FcGoogle size={24} /> Sign Up with Google
                 </button>
                 <p>
@@ -188,7 +194,7 @@ const handleGoogle = () => {
         <Footer></Footer>
       </footer>
     </div>
-    );
+  );
 };
 
 export default Register;

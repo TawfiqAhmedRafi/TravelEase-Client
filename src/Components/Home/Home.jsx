@@ -7,6 +7,8 @@ import AboutTravelEase from "../AboutTravelEase/AboutTravelEase ";
 import WhyChooseTravelEase from "../../Pages/WhyChooseTravelEase";
 import Statistics from "../../Pages/Statistics";
 import HowItWorks from "../../Pages/HowItWorks";
+import AddReview from "../../Pages/AddReview";
+import LatestReviews from "../../Pages/LatestReviews";
 
 const latestVehiclesPromise = fetch(
   "https://travel-ease-server-roan.vercel.app/latest-vehicles"
@@ -40,6 +42,10 @@ const Home = () => {
       <section>
         <HowItWorks></HowItWorks>
       </section>
+      <section>
+        <LatestReviews></LatestReviews>
+      </section>
+      {/* <AddReview></AddReview> */}
     </div>
   );
 };

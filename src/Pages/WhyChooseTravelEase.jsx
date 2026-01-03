@@ -34,7 +34,7 @@ const WhyChooseTravelEase = () => {
       <div className="container mx-auto w-11/12">
         {/* Heading */}
         <div className="text-center mb-14">
-          <h2 className="text-4xl font-bold text-base-content">
+          <h2 className="text-4xl font-bold text-base-content fredoka-font">
             Why Choose Travel<span className="text-secondary">Ease</span>
           </h2>
           <p className="mt-4 text-gray-400 max-w-2xl mx-auto">

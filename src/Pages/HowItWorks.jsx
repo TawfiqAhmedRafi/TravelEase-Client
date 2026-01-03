@@ -28,7 +28,7 @@ const HowItWorks = () => {
       <div className="container mx-auto w-11/12">
         {/* Heading */}
         <div className="text-center mb-14">
-          <h2 className="text-4xl font-bold">
+          <h2 className="text-4xl font-bold fredoka-font">
             How It <span className="text-secondary">Works</span>
           </h2>
           <p className="mt-4 text-gray-400 max-w-2xl mx-auto">

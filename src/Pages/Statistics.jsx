@@ -18,7 +18,7 @@ const Statistics = () => {
     <section className="bg-base-100 py-16">
       <div className="container mx-auto w-11/12">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold">
+          <h2 className="text-4xl font-bold fredoka-font">
             Travel<span className="text-secondary">Ease</span> in Numbers
           </h2>
           <p className="mt-4 text-gray-400">

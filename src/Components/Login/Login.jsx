@@ -43,12 +43,12 @@ const Login = () => {
       });
   };
     return (
-    <div className="bg-base-100 min-h-screen">
+    <div className="bg-base-100">
       <header>
         <Navbar></Navbar>
       </header>
       <main>
-        <div className="hero bg-base-100 min-h-screen">
+        <div className="hero bg-base-100 py-20">
           <div className="hero-content flex-col lg:flex-row-reverse">
             <div className="card bg-base-100 w-full max-w-sm md:max-w-md lg:max-w-lg shrink-0 shadow-2xl py-5">
               <h2 className="font-semibold text-2xl text-center">
