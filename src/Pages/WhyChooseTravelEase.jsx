@@ -35,7 +35,7 @@ const WhyChooseTravelEase = () => {
         {/* Heading */}
         <div className="text-center mb-14">
           <h2 className="text-4xl font-bold text-base-content">
-            Why Choose <span className="text-secondary">TravelEase</span>
+            Why Choose Travel<span className="text-secondary">Ease</span>
           </h2>
           <p className="mt-4 text-gray-400 max-w-2xl mx-auto">
             We focus on comfort, transparency, and trust to deliver a premium

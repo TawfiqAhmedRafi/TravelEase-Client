@@ -39,12 +39,13 @@ const MyBookings = () => {
     return () => clearInterval(interval);
   }, [user, axiosInstance]);
 
-  
+  // Timer to update countdown every minute
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
+  // Cancel booking
   const handleCancelBooking = async (vehicleId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -80,12 +81,43 @@ const MyBookings = () => {
     }
   };
 
-  // Calculate time left
+  // Mark booking as complete
+  const handleCompleteBooking = async (bookingId) => {
+    const result = await Swal.fire({
+      title: "Mark as Complete?",
+      text: "This will set the booking as completed and make the vehicle available.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, complete it",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const { data } = await axiosInstance.patch(
+          `/bookings/${bookingId}/complete`
+        );
+
+        toast.success(data.message);
+
+        setBookings((prev) =>
+          prev.map((b) =>
+            b._id === bookingId ? { ...b, status: "Completed" } : b
+          )
+        );
+      } catch (err) {
+        console.error(err);
+        toast.error(err.response?.data?.error || "Something went wrong");
+      }
+    }
+  };
+
   const getTimeLeft = (returnDate) => {
     const end = new Date(returnDate);
     const diff = end - now;
 
-    if (diff <= 0) return null; // expired
+    if (diff <= 0) return null; 
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -147,7 +179,6 @@ const MyBookings = () => {
                     {new Date(booking.returnDate).toLocaleDateString()}
                   </p>
 
-                 
                   {(() => {
                     const timeLeft = getTimeLeft(booking.returnDate);
                     if (!timeLeft) {
@@ -174,12 +205,22 @@ const MyBookings = () => {
                   <p className="text-sm text-neutral-content poppins-font">
                     <strong>Username:</strong> {user.displayName}
                   </p>
-                  <button
-                    onClick={() => handleCancelBooking(booking.vehicleId)}
-                    className="mt-3 px-4 py-2 bg-error text-white rounded-lg hover:bg-red-700 transition-all font-semibold poppins-font"
-                  >
-                    Cancel Booking
-                  </button>
+
+                  {/* Buttons */}
+                  <div className="flex gap-3 mt-3">
+                    <button
+                      onClick={() => handleCancelBooking(booking.vehicleId)}
+                      className="px-4 py-2 bg-error text-white rounded-lg hover:bg-red-700 transition-all font-semibold poppins-font"
+                    >
+                      Cancel Booking
+                    </button>
+                    <button
+                      onClick={() => handleCompleteBooking(booking._id)}
+                      className="px-4 py-2 bg-success text-white rounded-lg hover:bg-green-700 transition-all font-semibold poppins-font"
+                    >
+                      Mark Complete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
