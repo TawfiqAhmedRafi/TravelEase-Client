@@ -13,13 +13,7 @@ const RootLayout = () => {
             </header>
            <main className='px-5 md:px-8 my-10'>
             <section> <Outlet></Outlet></section>
-           <section>
-            <TopCategories></TopCategories>
-           </section>
-
-            <section className='py-5 md:py-8'>
-                <AboutTravelEase></AboutTravelEase>
-            </section>
+           
            </main>
             <footer>
                 <Footer></Footer>

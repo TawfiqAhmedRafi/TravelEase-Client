@@ -45,6 +45,16 @@ const Navbar = () => {
           All Vehicles
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/aboutUs"
+          className={({ isActive }) =>
+            isActive ? "border-b-2 border-secondary" : ""
+          }
+        >
+         About Us
+        </NavLink>
+      </li>
 
       {user && (
         <>

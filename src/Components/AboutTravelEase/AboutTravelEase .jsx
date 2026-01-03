@@ -29,14 +29,11 @@ const AboutTravelEase = () => {
             and secure.
           </p>
           <Link
-            to="#"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+            to="/aboutUs"
+           
             className="self-start btn rounded-full px-6 py-3 border-2 border-secondary text-secondary font-semibold transition-all duration-300 hover:bg-secondary hover:text-white hover:shadow-lg"
           >
-            Back to Top
+            Know More
           </Link>
         </div>
       </div>

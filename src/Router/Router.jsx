@@ -15,6 +15,9 @@ import PrivateRoute from "../Context/PrivateRoute";
 import ViewDetails from "../Pages/ViewDetails";
 import LoadingPage from "../Pages/LoadingPage";
 import UpdateVehicle from "../Pages/UpdateVehicle";
+import AboutUs from "../Pages/AboutUs";
+import PrivacyPolicy from "../Pages/PrivacyPolicy";
+import TermsAndConditions from "../Pages/TermsAndConditions ";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +27,22 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+       path: "aboutUs",
+        Component: AboutUs,
+      },
+      {
+       path: "aboutUs",
+        Component: AboutUs,
+      },
+      {
+       path: "privacy-policy",
+        Component: PrivacyPolicy,
+      },
+      {
+       path: "terms-and-conditions",
+        Component: TermsAndConditions,
       },
     ],
   },

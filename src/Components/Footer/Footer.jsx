@@ -1,7 +1,7 @@
 import React from "react";
 import {
   FaFacebookF,
-  FaTwitter,
+  
   FaInstagram,
   FaLinkedin,
   FaEnvelope,
@@ -13,7 +13,7 @@ import { FaXTwitter } from "react-icons/fa6";
 const Footer = () => {
   return (
     <footer className="bg-base-300 text-base-content pt-12 pb-6 poppins-font">
-      <div className="container mx-auto flex flex-col w-11/12  md:flex-row justify-between gap-10 md:gap-6">
+      <div className="container mx-auto flex flex-col w-11/12 md:flex-row justify-between gap-10 md:gap-6">
         {/* Brand / Logo */}
         <div className="flex flex-col gap-3 md:w-1/4">
           <h1 className="text-3xl font-bold fredoka-font text-accent">
@@ -42,28 +42,21 @@ const Footer = () => {
                 All Vehicles
               </a>
             </li>
+           
             <li>
               <a
-                href="/myVehicles"
+                href="/privacy-policy"
                 className="hover:text-accent transition-colors"
               >
-                My Vehicles
+                Privacy Policy
               </a>
             </li>
             <li>
               <a
-                href="/bookings"
+                href="/terms-and-conditions"
                 className="hover:text-accent transition-colors"
               >
-                My Bookings
-              </a>
-            </li>
-            <li>
-              <a
-                href="/addVehicles"
-                className="hover:text-accent transition-colors"
-              >
-                Add Vehicle
+                Terms & Conditions
               </a>
             </li>
           </ul>
@@ -101,7 +94,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="w-10 h-10 flex justify-center items-center rounded-full bg-base-200 text-gray-400 hover:bg-accent hover:text-white transition-colors"
             >
-              <FaXTwitter /> 
+              <FaXTwitter />
             </a>
             <a
               href="https://www.instagram.com"
@@ -124,8 +117,22 @@ const Footer = () => {
       </div>
 
       {/* Bottom */}
-      <div className="mt-12 border-t border-base-100 pt-4 text-center text-gray-400 text-sm">
-        &copy; {new Date().getFullYear()} TravelSease. All rights reserved.
+      <div className="mt-12 border-t border-base-100 pt-4 text-center text-gray-400 text-sm flex flex-col md:flex-row justify-center items-center gap-2">
+        <span>&copy; {new Date().getFullYear()} TravelEase. All rights reserved.</span>
+        <span className="hidden md:inline">|</span>
+        <a
+          href="/privacy-policy"
+          className="hover:text-accent transition-colors"
+        >
+          Privacy Policy
+        </a>
+        <span className="hidden md:inline">|</span>
+        <a
+          href="/terms-and-conditions"
+          className="hover:text-accent transition-colors"
+        >
+          Terms & Conditions
+        </a>
       </div>
     </footer>
   );
