@@ -55,6 +55,16 @@ const Navbar = () => {
          About Us
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive ? "border-b-2 border-secondary" : ""
+          }
+        >
+         Contact
+        </NavLink>
+      </li>
 
       {user && (
         <>

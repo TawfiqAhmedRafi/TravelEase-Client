@@ -18,6 +18,7 @@ import UpdateVehicle from "../Pages/UpdateVehicle";
 import AboutUs from "../Pages/AboutUs";
 import PrivacyPolicy from "../Pages/PrivacyPolicy";
 import TermsAndConditions from "../Pages/TermsAndConditions ";
+import Contact from "../Pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
        path: "terms-and-conditions",
         Component: TermsAndConditions,
+      },
+      {
+       path: "contact",
+        Component: Contact,
       },
     ],
   },
