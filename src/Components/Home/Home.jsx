@@ -9,6 +9,7 @@ import Statistics from "../../Pages/Statistics";
 import HowItWorks from "../../Pages/HowItWorks";
 import AddReview from "../../Pages/AddReview";
 import LatestReviews from "../../Pages/LatestReviews";
+import CTASection from "../../Pages/CTASection";
 
 const latestVehiclesPromise = fetch(
   "https://travel-ease-server-roan.vercel.app/latest-vehicles"
@@ -44,6 +45,9 @@ const Home = () => {
       </section>
       <section>
         <LatestReviews></LatestReviews>
+      </section>
+      <section>
+        <CTASection></CTASection>
       </section>
       {/* <AddReview></AddReview> */}
     </div>
