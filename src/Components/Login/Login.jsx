@@ -20,10 +20,12 @@ const Login = () => {
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
+     const from = location.state?.from || "/";
+
     signInUser(email, password)
       .then(() => {
        
-        navigate(`${location.state ? location.state : "/"}`);
+        navigate(from);
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -31,11 +33,13 @@ const Login = () => {
       });
   };
   const handleGoogle = () => {
+     const from = location.state?.from || "/";
+
     googleSignIn()
       .then(() => {
        
         toast.success("Google sign-in successful!");
-        navigate(`${location.state ? location.state : "/"}`);
+        navigate(from);
       })
       .catch((error) => {
         const errorMessage = error.message;

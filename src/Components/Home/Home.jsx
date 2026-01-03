@@ -30,13 +30,13 @@ const Home = () => {
       <section>
         <TopCategories></TopCategories>
       </section>
-
+      <section>
+        <WhyChooseTravelEase></WhyChooseTravelEase>
+      </section>
       <section className="py-5 md:py-8">
         <AboutTravelEase></AboutTravelEase>
       </section>
-      <section >
-        <WhyChooseTravelEase></WhyChooseTravelEase>
-      </section>
+
       <section>
         <Statistics></Statistics>
       </section>

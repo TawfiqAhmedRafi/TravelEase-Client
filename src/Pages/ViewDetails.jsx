@@ -37,6 +37,24 @@ const ViewDetails = () => {
   } = vehicle;
 
   const handleBookingModalOpen = () => {
+   if (!user) {
+  Swal.fire({
+    icon: "warning",
+    title: "Login Required",
+    text: "You need to login first to book a vehicle.",
+    showCancelButton: true,
+    confirmButtonText: "Login",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      navigate("/auth/login", {
+        state: { from: location.pathname },
+      });
+    }
+  });
+    return;
+  }
+
     bookingModalRef.current.showModal();
   };
 
@@ -79,7 +97,7 @@ const ViewDetails = () => {
 
     try {
       const { data } = await axiosInstance.post("/bookings", newBooking);
-
+      
       bookingModalRef.current.close();
 
       setVehicle((prev) => ({ ...prev, availability: "Booked" }));
