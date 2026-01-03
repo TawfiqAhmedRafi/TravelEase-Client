@@ -30,7 +30,7 @@ const AllVehiclesPage = () => {
     order: "asc",
   });
   const [page, setPage] = useState(1);
-  const limit = 9;
+  const limit = 12;
 
   const [pagination, setPagination] = useState({
     total: 0,
@@ -148,7 +148,7 @@ const AllVehiclesPage = () => {
         </div>
 
         {/* Vehicles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {vehicles.map((vehicle) => (
             <VehicleCard key={vehicle._id} vehicle={vehicle} />
           ))}

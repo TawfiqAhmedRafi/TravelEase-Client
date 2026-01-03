@@ -245,7 +245,7 @@ const ViewDetails = () => {
                   type="text"
                   name="name"
                   className="input w-full"
-                  defaultValue={user.displayName}
+                  defaultValue={user?.displayName}
                 />
                 <label className="label">Email</label>
                 <input
@@ -253,7 +253,7 @@ const ViewDetails = () => {
                   type="email"
                   name="email"
                   className="input w-full"
-                  defaultValue={user.email}
+                  defaultValue={user?.email}
                   readOnly
                 />
 

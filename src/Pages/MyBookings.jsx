@@ -1,39 +1,49 @@
-import React, { useEffect, useState, use } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import LoadingPage from "./LoadingPage";
 import Swal from "sweetalert2";
-
 import useAxios from "../Router/hooks/useAxios";
 
 const MyBookings = () => {
   const axiosInstance = useAxios();
-  const { user } = use(AuthContext);
+  const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
-  if (!user) return;
+  // Ticking state to re-render countdown
+  const [now, setNow] = useState(new Date());
 
-  const fetchBookings = async () => {
-    try {
-      const { data } = await axiosInstance.get(`/my-bookings-details?email=${user.email}`);
-      setBookings(data);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch bookings");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch bookings
+  useEffect(() => {
+    if (!user) return;
 
-  fetchBookings();
-  const interval = setInterval(fetchBookings, 15000); // refresh every 15s
-  return () => clearInterval(interval);
-}, [user, axiosInstance]);
+    const fetchBookings = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/my-bookings-details?email=${user.email}`
+        );
+        setBookings(data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to fetch bookings");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchBookings();
+    const interval = setInterval(fetchBookings, 15000); 
+    return () => clearInterval(interval);
+  }, [user, axiosInstance]);
+
+  
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleCancelBooking = async (vehicleId) => {
     const result = await Swal.fire({
@@ -70,28 +80,26 @@ const MyBookings = () => {
     }
   };
 
-  // Time left calculator
+  // Calculate time left
   const getTimeLeft = (returnDate) => {
-    const now = new Date();
     const end = new Date(returnDate);
+    const diff = end - now;
 
-    let diff = Math.max(0, end - now); // in milliseconds
+    if (diff <= 0) return null; // expired
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    diff -= days * (1000 * 60 * 60 * 24);
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    diff -= hours * (1000 * 60 * 60);
-
-    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
     return { days, hours, minutes };
   };
 
   if (loading) return <LoadingPage />;
 
-  // Filter out completed bookings
-  const activeBookings = bookings.filter((b) => b.status === "Booked");
+  // Only show active bookings that are not expired
+  const activeBookings = bookings.filter(
+    (b) => b.status === "Booked" && new Date(b.returnDate) > now
+  );
 
   return (
     <div className="bg-base-100 min-h-screen">
@@ -109,7 +117,7 @@ const MyBookings = () => {
             You have no active bookings.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {activeBookings.map((booking) => (
               <div
                 key={booking._id}
@@ -139,15 +147,20 @@ const MyBookings = () => {
                     {new Date(booking.returnDate).toLocaleDateString()}
                   </p>
 
-                  {/* Countdown Timer */}
+                 
                   {(() => {
-                    const { days, hours, minutes } = getTimeLeft(
-                      booking.returnDate
-                    );
+                    const timeLeft = getTimeLeft(booking.returnDate);
+                    if (!timeLeft) {
+                      return (
+                        <p className="text-sm text-gray-400 font-semibold">
+                          Booking expired
+                        </p>
+                      );
+                    }
                     return (
                       <p className="text-sm text-error poppins-font">
                         <strong className="text-neutral-content">Time Left:</strong>{" "}
-                        {days}d {hours}h {minutes}m
+                        {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m
                       </p>
                     );
                   })()}
