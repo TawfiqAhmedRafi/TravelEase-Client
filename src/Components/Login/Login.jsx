@@ -1,15 +1,15 @@
-import React, { use, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
-import AuthProvider from '../../Context/AuthProvider';
-import { toast } from 'react-toastify';
-import { FcGoogle } from 'react-icons/fc';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { AuthContext } from '../../Context/AuthContext';
-import Navbar from '../Navbar/Navbar';
-import Footer from '../Footer/Footer';
+import React, { use, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import AuthProvider from "../../Context/AuthProvider";
+import { toast } from "react-toastify";
+import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { AuthContext } from "../../Context/AuthContext";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 
 const Login = () => {
-     const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { signInUser, googleSignIn } = use(AuthContext);
   const [email, setEmail] = useState("");
@@ -20,11 +20,10 @@ const Login = () => {
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-     const from = location.state?.from || "/";
+    const from = location.state?.from || "/";
 
     signInUser(email, password)
       .then(() => {
-       
         navigate(from);
       })
       .catch((error) => {
@@ -33,11 +32,10 @@ const Login = () => {
       });
   };
   const handleGoogle = () => {
-     const from = location.state?.from || "/";
+    const from = location.state?.from || "/";
 
     googleSignIn()
       .then(() => {
-       
         toast.success("Google sign-in successful!");
         navigate(from);
       })
@@ -46,7 +44,7 @@ const Login = () => {
         setError(errorMessage);
       });
   };
-    return (
+  return (
     <div className="bg-base-100">
       <header>
         <Navbar></Navbar>
@@ -111,6 +109,57 @@ const Login = () => {
                 >
                   <FcGoogle size={24} /> Login with Google
                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const demoEmail = "aizen@gmail.com";
+                    const demoPassword = "Aizen@1";
+                    setEmail(demoEmail);
+
+                    const passwordInput = document.querySelector(
+                      'input[name="password"]'
+                    );
+                    if (passwordInput) passwordInput.value = demoPassword;
+
+                    // Call login handler
+                    handleLogIn({
+                      preventDefault: () => {},
+                      target: {
+                        email: { value: demoEmail },
+                        password: { value: demoPassword },
+                      },
+                    });
+                  }}
+                  className="btn btn-accent btn-outline w-full mt-2"
+                >
+                  Login as Demo Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const demoEmail = "urahara@gmail.com";
+                    const demoPassword = "Urahara@1";
+                    setEmail(demoEmail);
+
+                    const passwordInput = document.querySelector(
+                      'input[name="password"]'
+                    );
+                    if (passwordInput) passwordInput.value = demoPassword;
+
+                    // Call login handler
+                    handleLogIn({
+                      preventDefault: () => {},
+                      target: {
+                        email: { value: demoEmail },
+                        password: { value: demoPassword },
+                      },
+                    });
+                  }}
+                  className="btn btn-accent btn-outline w-full mt-2"
+                >
+                  Login as Demo User
+                </button>
+
                 <p>
                   Don't have an Account?{" "}
                   <Link
@@ -129,7 +178,7 @@ const Login = () => {
         <Footer></Footer>
       </footer>
     </div>
-    );
+  );
 };
 
 export default Login;

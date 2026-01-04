@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
-
 import { toast } from "react-toastify";
 import useAxiosSecure from "../Router/hooks/useAxiosSecure";
 import useAuth from "../Router/hooks/useAuth";
@@ -26,7 +25,6 @@ const AddReview = ({ vehicleId }) => {
       rating,
       comment,
       userName: user?.displayName || "Anonymous User",
-      
     };
 
     try {
@@ -36,7 +34,7 @@ const AddReview = ({ vehicleId }) => {
       setRating(0);
       setComment("");
     } catch (error) {
-        console.log(error)
+      console.error(error);
       toast.error("Failed to submit review");
     } finally {
       setLoading(false);
@@ -44,60 +42,62 @@ const AddReview = ({ vehicleId }) => {
   };
 
   return (
-    <div className="bg-base-100 rounded-2xl p-8 shadow max-w-xl">
-      <h2 className="text-2xl font-bold mb-4">
-        Leave a <span className="text-secondary">Review</span>
-      </h2>
+    <div className="flex justify-center mt-12">
+      <div className="bg-base-100 rounded-2xl p-8 shadow-xl max-w-xl w-full">
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Leave a <span className="text-secondary">Review</span>
+        </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Rating */}
-        <div>
-          <label className="block mb-2 font-medium">Your Rating</label>
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => {
-              const value = i + 1;
-              return (
-                <button
-                  type="button"
-                  key={value}
-                  onClick={() => setRating(value)}
-                  onMouseEnter={() => setHover(value)}
-                  onMouseLeave={() => setHover(0)}
-                  className="focus:outline-none"
-                >
-                  <FaStar
-                    className={`text-2xl ${
-                      value <= (hover || rating)
-                        ? "text-secondary"
-                        : "text-gray-400"
-                    }`}
-                  />
-                </button>
-              );
-            })}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Rating */}
+          <div>
+            <label className="block mb-2 font-medium">Your Rating</label>
+            <div className="flex gap-1 justify-center">
+              {[...Array(5)].map((_, i) => {
+                const value = i + 1;
+                return (
+                  <button
+                    type="button"
+                    key={value}
+                    onClick={() => setRating(value)}
+                    onMouseEnter={() => setHover(value)}
+                    onMouseLeave={() => setHover(0)}
+                    className="focus:outline-none"
+                  >
+                    <FaStar
+                      className={`text-2xl transition ${
+                        value <= (hover || rating)
+                          ? "text-secondary"
+                          : "text-gray-400"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Comment */}
-        <div>
-          <label className="block mb-2 font-medium">Your Experience</label>
-          <textarea
-            className="textarea textarea-bordered w-full h-28"
-            placeholder="Share your honest experience with the vehicle and booking process..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          ></textarea>
-        </div>
+          {/* Comment */}
+          <div>
+            <label className="block mb-2 font-medium">Your Experience</label>
+            <textarea
+              className="textarea textarea-bordered w-full h-28"
+              placeholder="Share your honest experience with the vehicle and booking process..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn btn-secondary w-full"
-        >
-          {loading ? "Submitting..." : "Submit Review"}
-        </button>
-      </form>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-secondary w-full"
+          >
+            {loading ? "Submitting..." : "Submit Review"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

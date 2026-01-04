@@ -52,6 +52,12 @@ const allMenuItems = [
     roles: ["admin"],
   },
   {
+    name: "Webpage Reviews",
+    path: "/dashboard/addReview",
+    icon: Star,
+    roles: ["user"],
+  },
+  {
     name: "Settings",
     path: "/dashboard/settings",
     icon: Settings,
