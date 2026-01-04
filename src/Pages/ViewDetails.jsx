@@ -37,23 +37,23 @@ const ViewDetails = () => {
   } = vehicle;
 
   const handleBookingModalOpen = () => {
-   if (!user) {
-  Swal.fire({
-    icon: "warning",
-    title: "Login Required",
-    text: "You need to login first to book a vehicle.",
-    showCancelButton: true,
-    confirmButtonText: "Login",
-    cancelButtonText: "Cancel",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      navigate("/auth/login", {
-        state: { from: location.pathname },
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "You need to login first to book a vehicle.",
+        showCancelButton: true,
+        confirmButtonText: "Login",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/auth/login", {
+            state: { from: location.pathname },
+          });
+        }
       });
+      return;
     }
-  });
-    return;
-  }
 
     bookingModalRef.current.showModal();
   };
@@ -66,7 +66,6 @@ const ViewDetails = () => {
     let days = Number(form.days.value) || 0;
     let hours = Number(form.hours.value) || 0;
 
-   
     if (days === 0 && hours === 0) {
       Swal.fire({
         icon: "error",
@@ -97,7 +96,7 @@ const ViewDetails = () => {
 
     try {
       const { data } = await axiosInstance.post("/bookings", newBooking);
-      
+
       bookingModalRef.current.close();
 
       setVehicle((prev) => ({ ...prev, availability: "Booked" }));
@@ -114,7 +113,6 @@ const ViewDetails = () => {
     } catch (error) {
       console.error("Booking failed", error);
 
-      
       Swal.fire({
         title: "Error!",
         text: "Failed to book the vehicle. Please try again.",
@@ -132,10 +130,6 @@ const ViewDetails = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header>
-        <Navbar />
-      </header>
-
       <main className="w-11/12 grow container mx-auto p-5">
         <h2 className="text-3xl md:text-4xl font-bold text-accent fredoka-font mb-8 text-center">
           Vehicle <span className="text-secondary">Details</span>
@@ -325,10 +319,6 @@ const ViewDetails = () => {
           </div>
         </dialog>
       </main>
-
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

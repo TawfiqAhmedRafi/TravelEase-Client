@@ -21,7 +21,7 @@ const AddVehicles = () => {
     description: "",
     coverImage: "",
   });
-  const [coverFile, setCoverFile] = useState(null); 
+  const [coverFile, setCoverFile] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,12 +41,13 @@ const AddVehicles = () => {
     }
 
     try {
-     
       let coverImageURL = vehicle.coverImage;
       if (coverFile) {
         const formData = new FormData();
         formData.append("image", coverFile);
-        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host_key
+        }`;
         const imageRes = await axios.post(image_API_URL, formData);
         coverImageURL = imageRes.data.data.url;
       }
@@ -89,10 +90,6 @@ const AddVehicles = () => {
 
   return (
     <div>
-      <header>
-        <Navbar />
-      </header>
-
       <main className="py-10 px-5 md:px-20">
         <h2 className="text-3xl md:text-5xl font-semibold text-primary text-center mb-8 poppins-font">
           Add <span className="text-secondary">Vehicle</span>
@@ -186,10 +183,6 @@ const AddVehicles = () => {
           </button>
         </form>
       </main>
-
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

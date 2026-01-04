@@ -12,7 +12,7 @@ const MyVehicles = () => {
 
   const [vehicles, setVehicles] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(8); 
+  const [limit, setLimit] = useState(8);
   const [pagination, setPagination] = useState({
     total: 0,
     totalPages: 1,
@@ -51,12 +51,8 @@ const MyVehicles = () => {
 
   return (
     <div>
-      <header>
-        <Navbar />
-      </header>
-
       <main className="py-5 md:py-10 px-5 md:px-8">
-        <h2 className="text-3xl md:text-5xl font-semibold text-primary text-center mb-5 poppins-font">
+        <h2 className="text-3xl md:text-5xl font-semibold text-primary  mb-5 poppins-font">
           My <span className="text-secondary">Vehicles</span>
         </h2>
 
@@ -71,7 +67,7 @@ const MyVehicles = () => {
               setPage(1); // Reset page to 1 on limit change
             }}
           >
-            {[6, 12, 20, 50].map((n) => (
+            {[4, 8, 12].map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
@@ -105,10 +101,6 @@ const MyVehicles = () => {
           onPageChange={setPage}
         />
       </main>
-
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

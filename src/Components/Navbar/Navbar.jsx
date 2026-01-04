@@ -81,25 +81,16 @@ const Navbar = () => {
 
           <li>
             <NavLink
-              to="/myVehicles"
+              to="/dashboard"
               className={({ isActive }) =>
                 isActive ? "border-b-2 border-secondary" : ""
               }
             >
-              My Vehicles
+              Dashboard
             </NavLink>
           </li>
 
-          <li>
-            <NavLink
-              to="/bookings"
-              className={({ isActive }) =>
-                isActive ? "border-b-2 border-secondary" : ""
-              }
-            >
-              My Bookings
-            </NavLink>
-          </li>
+         
         </>
       )}
     </>

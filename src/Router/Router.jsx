@@ -19,6 +19,8 @@ import AboutUs from "../Pages/AboutUs";
 import PrivacyPolicy from "../Pages/PrivacyPolicy";
 import TermsAndConditions from "../Pages/TermsAndConditions ";
 import Contact from "../Pages/Contact";
+import DashboardLayout from "../Layouts/DashboardLayout";
+import DashboardHome from "../Pages/Dashboard/DashboardHome";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,23 @@ const router = createBrowserRouter([
         Component: AllVehiclesPage,
         hydrateFallbackElement: <LoadingPage></LoadingPage>,
       },
+      {
+        path: "/addVehicles",
+        element: (
+          <PrivateRoute>
+            <AddVehicles></AddVehicles>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/vehicles/:id",
+        loader: ({ params }) =>
+          fetch(
+            `https://travel-ease-server-roan.vercel.app/vehicles/${params.id}`
+          ),
+        element: <ViewDetails></ViewDetails>,
+        hydrateFallbackElement: <LoadingPage></LoadingPage>,
+      },
     ],
   },
   {
@@ -77,47 +96,33 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/myVehicles",
-    loader: () => fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
+    path: "/dashboard",
     element: (
       <PrivateRoute>
-        {" "}
-        <MyVehicles></MyVehicles>
+        <DashboardLayout></DashboardLayout>
       </PrivateRoute>
     ),
+    children: [
+      { index: true,
+        Component : DashboardHome
+       },
+      {
+        path: "myVehicles",
+        loader: () =>
+          fetch("https://travel-ease-server-roan.vercel.app/vehicles"),
+        element: <MyVehicles></MyVehicles>,
+      },
+      {
+        path: "update-vehicle/:id",
+        element: <UpdateVehicle></UpdateVehicle>,
+      },
+      {
+        path: "bookings",
+        element: <MyBookings></MyBookings>,
+      },
+    ],
   },
 
-  {
-    path: "/addVehicles",
-    element: (
-      <PrivateRoute>
-        <AddVehicles></AddVehicles>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/update-vehicle/:id",
-    element: (
-      <PrivateRoute>
-        <UpdateVehicle></UpdateVehicle>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/bookings",
-    element: (
-      <PrivateRoute>
-        <MyBookings></MyBookings>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/vehicles/:id",
-    loader: ({ params }) =>
-      fetch(`https://travel-ease-server-roan.vercel.app/vehicles/${params.id}`),
-    element: <ViewDetails></ViewDetails>,
-    hydrateFallbackElement: <LoadingPage></LoadingPage>,
-  },
   {
     path: "*",
     element: <ErrorPage></ErrorPage>,
