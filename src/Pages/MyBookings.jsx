@@ -134,10 +134,8 @@ const MyBookings = () => {
   );
 
   return (
-    <div className="bg-base-100 min-h-screen">
-      <header>
-        <Navbar />
-      </header>
+    <div className="bg-base-100">
+      
 
       <main className="py-10 px-5 md:px-20">
         <h2 className="text-3xl md:text-5xl font-semibold text-primary text-center mb-8 poppins-font">
@@ -228,9 +226,7 @@ const MyBookings = () => {
         )}
       </main>
 
-      <footer>
-        <Footer />
-      </footer>
+     
     </div>
   );
 };

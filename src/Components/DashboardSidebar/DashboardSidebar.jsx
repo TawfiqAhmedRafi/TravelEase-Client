@@ -34,7 +34,7 @@ const allMenuItems = [
   },
   {
     name: "My Bookings",
-    path: "/bookings",
+    path: "/dashboard/bookings",
     icon: CalendarCheck,
     roles: ["user","admin"],
   },
@@ -49,7 +49,7 @@ const allMenuItems = [
     name: "Settings",
     path: "/dashboard/settings",
     icon: Settings,
-    roles: ["admin", "tutor", "student"],
+    roles: ["admin",  "user"],
   },
 ];
 

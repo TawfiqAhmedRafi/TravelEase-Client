@@ -21,6 +21,9 @@ import TermsAndConditions from "../Pages/TermsAndConditions ";
 import Contact from "../Pages/Contact";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import DashboardHome from "../Pages/Dashboard/DashboardHome";
+import UsersManagement from "../Pages/UsersManagement";
+import AdminRoute from "../Routes/AdminRoute";
+import Settings from "../Pages/Dashboard/Settings";
 
 const router = createBrowserRouter([
   {
@@ -103,9 +106,7 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true,
-        Component : DashboardHome
-       },
+      { index: true, Component: DashboardHome },
       {
         path: "myVehicles",
         loader: () =>
@@ -119,6 +120,18 @@ const router = createBrowserRouter([
       {
         path: "bookings",
         element: <MyBookings></MyBookings>,
+      },
+      {
+        path: "settings",
+        element: <Settings></Settings>,
+      },
+      {
+        path: "users",
+        element: (
+          <AdminRoute>
+            <UsersManagement></UsersManagement>
+          </AdminRoute>
+        ),
       },
     ],
   },
