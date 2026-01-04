@@ -1,15 +1,15 @@
-import React, { use,  useState } from "react";
+import React, { useState, useContext } from "react";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { AuthContext } from "../Context/AuthContext";
 import useAxios from "../Router/hooks/useAxios";
-
+import axios from "axios";
 
 const AddVehicles = () => {
-    const {user} = use(AuthContext)
-    const axiosInstance = useAxios()
+  const { user } = useContext(AuthContext);
+  const axiosInstance = useAxios();
   const [vehicle, setVehicle] = useState({
     vehicleName: "",
     category: "",
@@ -21,56 +21,72 @@ const AddVehicles = () => {
     description: "",
     coverImage: "",
   });
+  const [coverFile, setCoverFile] = useState(null); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVehicle((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    setCoverFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Validate required fields
-  if (!vehicle.vehicleName || !vehicle.category || !vehicle.pricePerDay) {
-    toast.error("Please fill in all required fields");
-    return;
-  }
+    if (!vehicle.vehicleName || !vehicle.category || !vehicle.pricePerDay) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
 
-  try {
-    // POST request using Axios
-    const { data } = await axiosInstance.post("/vehicles", {
-      ...vehicle,
-      owner: user.displayName,
-    pricePerDay: parseFloat(vehicle.pricePerDay),
-      userEmail: user.email,
-      createdAt: new Date(),
-    });
+    try {
+     
+      let coverImageURL = vehicle.coverImage;
+      if (coverFile) {
+        const formData = new FormData();
+        formData.append("image", coverFile);
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
+        const imageRes = await axios.post(image_API_URL, formData);
+        coverImageURL = imageRes.data.data.url;
+      }
 
-    Swal.fire({
-      title: "Success!",
-      text: "Vehicle added successfully!",
-      icon: "success",
-      confirmButtonColor: "#D4AF37",
-      confirmButtonText: "OK",
-    });
+      const { data } = await axiosInstance.post("/vehicles", {
+        ...vehicle,
+        coverImage: coverImageURL,
+        owner: user.displayName,
+        pricePerDay: parseFloat(vehicle.pricePerDay),
+        userEmail: user.email,
+        createdAt: new Date(),
+      });
 
-    // Reset vehicle form
-    setVehicle({
-      vehicleName: "",
-      category: "",
-      pricePerDay: "",
-      location: "",
-      availability: "Available",
-      fuelType: "",
-      seatCapacity: "",
-      description: "",
-      coverImage: "",
-    });
-  } catch (err) {
-    console.error(err);
-    toast.error(err.response?.data?.error || "Failed to add vehicle");
-  }
-};
+      Swal.fire({
+        title: "Success!",
+        text: "Vehicle added successfully!",
+        icon: "success",
+        confirmButtonColor: "#D4AF37",
+        confirmButtonText: "OK",
+      });
+
+      // Reset form
+      setVehicle({
+        vehicleName: "",
+        category: "",
+        pricePerDay: "",
+        location: "",
+        availability: "Available",
+        fuelType: "",
+        seatCapacity: "",
+        description: "",
+        coverImage: "",
+      });
+      setCoverFile(null);
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.error || "Failed to add vehicle");
+    }
+  };
+
   return (
     <div>
       <header>
@@ -147,13 +163,11 @@ const AddVehicles = () => {
             className="p-3 rounded-xl border border-base-300 bg-base-100 focus:outline-none focus:ring-2 focus:ring-secondary"
           />
 
+          <label className="label">Cover Image</label>
           <input
-            type="text"
-            name="coverImage"
-            placeholder="Cover Image URL"
-            value={vehicle.coverImage}
-            onChange={handleChange}
-            className="p-3 rounded-xl border border-base-300 bg-base-100 focus:outline-none focus:ring-2 focus:ring-secondary"
+            type="file"
+            onChange={handleFileChange}
+            className="file-input file-input-bordered w-full"
           />
 
           <textarea

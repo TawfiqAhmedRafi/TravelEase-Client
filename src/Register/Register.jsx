@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useContext, useState } from "react";
 import Navbar from "../Components/Navbar/Navbar";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -6,11 +6,11 @@ import Footer from "../Components/Footer/Footer";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router";
-
 import useAxios from "../Router/hooks/useAxios";
+import axios from "axios";
 
 const Register = () => {
-  const { createUser, setUser, googleSignIn, updateUser } = use(AuthContext);
+  const { createUser, setUser, googleSignIn, updateUser } = useContext(AuthContext);
   const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
@@ -21,9 +21,9 @@ const Register = () => {
 
     const form = e.target;
     const name = form.name.value;
-    const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
+    const photoFile = form.photo.files[0]; 
 
     const uppercasePattern = /[A-Z]/;
     const lowercasePattern = /[a-z]/;
@@ -43,25 +43,32 @@ const Register = () => {
     }
 
     try {
-      // Create user with auth
+
       const res = await createUser(email, password);
       const user = res.user;
 
-      // Update user profile
-      await updateUser({ displayName: name, photoURL: photo });
+      let photoURL = "";
+      if (photoFile) {
+        const formData = new FormData();
+        formData.append("image", photoFile);
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
 
-      // Save user in state
-      setUser({ ...user, displayName: name, photoURL: photo });
+        const imageRes = await axios.post(image_API_URL, formData);
+        photoURL = imageRes.data.data.url;
+      }
+e
+      await updateUser({ displayName: name, photoURL });
 
-      // Prepare new user data for backend
+      setUser({ ...user, displayName: name, photoURL });
+
+  
       const newUser = {
         name,
         email,
-        image: photo,
+        image: photoURL,
       };
 
-      // Save user to backend
-      const { data } = await axiosInstance.post("/users", newUser);
+      await axiosInstance.post("/users", newUser);
 
       toast.success("Sign-up successful!");
       navigate("/");
@@ -70,6 +77,7 @@ const Register = () => {
       toast.error(error.message || "Sign-up failed!");
     }
   };
+
   const handleGoogle = () => {
     return googleSignIn()
       .then(async (res) => {
@@ -82,8 +90,7 @@ const Register = () => {
         };
 
         try {
-          // Axios automatically sets Content-Type for JSON
-          const { data } = await axiosInstance.post("/users", newUser);
+          await axiosInstance.post("/users", newUser);
         } catch (error) {
           console.error("Failed to save user", error);
           toast.error("Failed to save user info.");
@@ -94,25 +101,25 @@ const Register = () => {
         navigate("/");
       })
       .catch((error) => {
-        const errorMessage = error.message;
-        toast(errorMessage);
+        toast.error(error.message);
       });
   };
+
   return (
     <div>
       <header>
-        <Navbar></Navbar>
+        <Navbar />
       </header>
       <main>
-        <div className=" hero bg-base-100 ">
+        <div className="hero bg-base-100">
           <div className="hero-content flex-col lg:flex-row-reverse">
             <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl px-2 py-5">
               <h2 className="text-2xl font-semibold text-center">
-                Register your account{" "}
+                Register your account
               </h2>
               <form onSubmit={handleSubmit} className="card-body">
                 <fieldset className="fieldset">
-                  {/* name */}
+                  {/* Name */}
                   <label className="label">Name</label>
                   <input
                     name="name"
@@ -122,16 +129,16 @@ const Register = () => {
                     required
                   />
 
-                  {/* PhotoURL */}
-                  <label className="label">PhotoURL</label>
+                  {/* Photo */}
+                  <label className="label">Photo</label>
                   <input
                     name="photo"
-                    type="text"
-                    className="input"
-                    placeholder="PhotoURL"
+                    type="file"
+                    className="file-input file-input-bordered w-full"
                     required
                   />
-                  {/* email */}
+
+                  {/* Email */}
                   <label className="label">Email</label>
                   <input
                     name="email"
@@ -140,7 +147,8 @@ const Register = () => {
                     placeholder="Email"
                     required
                   />
-                  {/* pass */}
+
+                  {/* Password */}
                   <label className="label">Password</label>
                   <div className="relative">
                     <input
@@ -155,14 +163,9 @@ const Register = () => {
                       type="button"
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary focus:outline-none"
                     >
-                      {showPassword ? (
-                        <FaEye></FaEye>
-                      ) : (
-                        <FaEyeSlash></FaEyeSlash>
-                      )}
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
-
                   {passwordError && (
                     <p className="text-accent text-sm mt-1">{passwordError}</p>
                   )}
@@ -175,15 +178,16 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={handleGoogle}
-                  className="btn btn-secondary btn-outline w-full "
+                  className="btn btn-secondary btn-outline w-full mt-3"
                 >
                   <FcGoogle size={24} /> Sign Up with Google
                 </button>
-                <p>
-                  Already have an account?
+
+                <p className="mt-2">
+                  Already have an account?{" "}
                   <Link to="/auth/login" className="text-secondary underline">
                     Login
-                  </Link>{" "}
+                  </Link>
                 </p>
               </form>
             </div>
@@ -191,7 +195,7 @@ const Register = () => {
         </div>
       </main>
       <footer className="px-5 md:px-8">
-        <Footer></Footer>
+        <Footer />
       </footer>
     </div>
   );
