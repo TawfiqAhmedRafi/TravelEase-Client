@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, {  useEffect, useState } from "react";
 import LatestVehicles from "../../LatestVehicles/LatestVehicles";
 import LoadingPage from "../../Pages/LoadingPage";
 import Banner from "../Banner/Banner";
@@ -10,11 +10,23 @@ import HowItWorks from "../../Pages/HowItWorks";
 import AddReview from "../../Pages/AddReview";
 import LatestReviews from "../../Pages/LatestReviews";
 import CTASection from "../../Pages/CTASection";
+import useAxios from "../../Router/hooks/useAxios";
+import FeaturedOwners from "../../Pages/FeaturedOwners ";
 
-const latestVehiclesPromise = fetch(
-  "https://travel-ease-server-roan.vercel.app/latest-vehicles"
-).then((res) => res.json());
+
 const Home = () => {
+   const [latestVehicles, setLatestVehicles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const axiosInstance = useAxios();
+  useEffect(() => {
+    axiosInstance
+      .get("/latest-vehicles") // endpoint relative to your axios base URL
+      .then((res) => {
+        setLatestVehicles(res.data);
+      })
+      .catch((err) => console.error("Failed to fetch latest vehicles:", err))
+      .finally(() => setLoading(false));
+  }, [axiosInstance]);
   return (
     <div>
       <section className="pb-5 md:pb-10">
@@ -22,13 +34,16 @@ const Home = () => {
         <Banner></Banner>
       </section>
 
-      <Suspense fallback={<LoadingPage></LoadingPage>}>
-        <LatestVehicles
-          latestVehiclesPromise={latestVehiclesPromise}
-        ></LatestVehicles>
-      </Suspense>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <LatestVehicles latestVehicles={latestVehicles} />
+      )}
       <section>
         <TopCategories></TopCategories>
+      </section>
+      <section>
+        <FeaturedOwners></FeaturedOwners>
       </section>
       <section>
         <WhyChooseTravelEase></WhyChooseTravelEase>

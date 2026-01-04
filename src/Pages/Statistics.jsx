@@ -27,19 +27,15 @@ const Statistics = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
-          <div className="bg-base-200 rounded-2xl p-8 text-center shadow">
+          <div className="bg-base-200 rounded-2xl p-8 text-center shadow transform transition duration-300 hover:-translate-y-2 hover:shadow-lg">
             <FaCar className="text-4xl text-accent mx-auto mb-4" />
-            <h3 className="text-3xl font-bold">
-              {stats.totalVehicles}+
-            </h3>
+            <h3 className="text-3xl font-bold">{stats.totalVehicles}+</h3>
             <p className="text-gray-400 mt-2">Total Vehicles</p>
           </div>
 
-          <div className="bg-base-200 rounded-2xl p-8 text-center shadow">
+          <div className="bg-base-200 rounded-2xl p-8 text-center shadow transform transition duration-300 hover:-translate-y-2 hover:shadow-lg">
             <FaCalendarCheck className="text-4xl text-accent mx-auto mb-4" />
-            <h3 className="text-3xl font-bold">
-              {stats.totalBookings}+
-            </h3>
+            <h3 className="text-3xl font-bold">{stats.totalBookings}+</h3>
             <p className="text-gray-400 mt-2">Total Bookings</p>
           </div>
         </div>
