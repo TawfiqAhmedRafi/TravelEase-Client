@@ -24,7 +24,7 @@ const allMenuItems = [
     name: "Dashboard",
     path: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["admin", "tutor", "student"],
+    roles: ["admin", "user"],
   },
   {
     name: "My Vehicles",

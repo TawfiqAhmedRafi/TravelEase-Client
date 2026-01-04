@@ -65,8 +65,8 @@ console.log(dashboard)
       </div>
 
       {/* PIE CHART: Vehicle Availability */}
-      <div className="p-4 md:p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+      <div className="p-4 md:p-6 rounded-xl shadow-lg bg-base-100 dark:bg-gray-800 text-center">
+        <h2 className="text-lg md:text-xl font-semibold mb-4">
           Vehicle Availability
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
@@ -96,8 +96,8 @@ console.log(dashboard)
       </div>
 
       {/* BAR CHART: Bookings Over Time */}
-      <div className="p-4 md:p-6 rounded-xl shadow-lg bg-white dark:bg-gray-800 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+      <div className="p-4 md:p-6 rounded-xl shadow-lg bg-base-100 dark:bg-gray-800 text-center">
+        <h2 className="text-lg md:text-xl font-semibold mb-4  ">
           Bookings Over Time
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>

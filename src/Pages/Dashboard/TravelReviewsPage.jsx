@@ -47,7 +47,7 @@ const TravelReviewsPage = () => {
             <div
               key={rev._id}
               className="
-                bg-white/80 backdrop-blur rounded-2xl
+                bg-base-200/80 backdrop-blur rounded-2xl
                 shadow-sm
                 transition-all duration-300 ease-out
                 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]
@@ -83,7 +83,7 @@ const TravelReviewsPage = () => {
                   </div>
 
                   {/* Review Text */}
-                  <div className="mt-4 pl-4 border-l-4 border-primary/30 text-gray-700 leading-relaxed italic">
+                  <div className="mt-4 pl-4 border-l-4 border-primary/30 text-neutral-content leading-relaxed italic">
                     “{rev.comment || "-"}”
                   </div>
                 </div>
