@@ -24,6 +24,7 @@ import DashboardHome from "../Pages/Dashboard/DashboardHome";
 import UsersManagement from "../Pages/UsersManagement";
 import AdminRoute from "../Routes/AdminRoute";
 import Settings from "../Pages/Dashboard/Settings";
+import TravelReviewsPage from "../Pages/Dashboard/TravelReviewsPage";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings></Settings>,
+      },
+      {
+        path: "review",
+        element: <TravelReviewsPage></TravelReviewsPage>,
       },
       {
         path: "users",
