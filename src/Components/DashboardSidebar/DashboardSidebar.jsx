@@ -52,7 +52,7 @@ const allMenuItems = [
     roles: ["admin"],
   },
   {
-    name: "Webpage Reviews",
+    name: "Add Reviews",
     path: "/dashboard/addReview",
     icon: Star,
     roles: ["user"],

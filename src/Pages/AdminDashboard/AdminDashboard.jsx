@@ -15,13 +15,26 @@ import {
 import LoadingPage from "../../Pages/LoadingPage";
 import useAxiosSecure from "../../Router/hooks/useAxiosSecure";
 
-const COLORS = ["#4ade80", "#f87171", "#22c55e", "#facc15"]; // Available/Booked/Completed/Pending
+// COLORS for charts
+const COLORS = [
+  "var(--color-gold)",
+  "var(--color-slate)",
+  "var(--color-blue)",
+  "var(--color-dark-blue)",
+];
 
 const AdminDashboard = () => {
-  const isMobile = window.innerWidth < 640;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
+
+  // Handle window resize for responsiveness
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -38,7 +51,7 @@ const AdminDashboard = () => {
             pending: statsRes.data.pendingBookings,
           },
           pieChart: availabilityRes.data,
-          barChart: bookingsRes.data, 
+          barChart: bookingsRes.data,
         });
       } catch (err) {
         console.error("Dashboard fetch error:", err);
@@ -49,7 +62,7 @@ const AdminDashboard = () => {
 
     fetchDashboard();
   }, [axiosSecure]);
-console.log(dashboard)
+
   if (loading) return <LoadingPage />;
 
   const { cards, pieChart, barChart } = dashboard;
@@ -58,15 +71,15 @@ console.log(dashboard)
     <div className="p-2 md:p-6 space-y-10">
       {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card title="Total Vehicles" value={cards.totalVehicles} bg="bg-blue-500" />
-        <Card title="Total Bookings" value={cards.totalBookings} bg="bg-indigo-500" />
-        <Card title="Completed Bookings" value={cards.completed} bg="bg-green-500" />
-        <Card title="Pending Bookings" value={cards.pending} bg="bg-yellow-500" />
+        <Card title="Total Vehicles" value={cards.totalVehicles} bg="var(--color-gold)" />
+        <Card title="Total Bookings" value={cards.totalBookings} bg="var(--color-slate)" />
+        <Card title="Completed Bookings" value={cards.completed} bg="var(--color-blue)" />
+        <Card title="Pending Bookings" value={cards.pending} bg="var(--color-dark-blue)" />
       </div>
 
       {/* PIE CHART: Vehicle Availability */}
       <div className="p-4 md:p-6 rounded-xl shadow-lg bg-base-100 dark:bg-gray-800 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 fredoka-font">
           Vehicle Availability
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
@@ -97,11 +110,14 @@ console.log(dashboard)
 
       {/* BAR CHART: Bookings Over Time */}
       <div className="p-4 md:p-6 rounded-xl shadow-lg bg-base-100 dark:bg-gray-800 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4  ">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 fredoka-font">
           Bookings Over Time
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
-          <BarChart data={barChart} margin={{ top: 10, right: 30, left: 0, bottom: isMobile ? 50 : 20 }}>
+          <BarChart
+            data={barChart}
+            margin={{ top: 10, right: 30, left: 0, bottom: isMobile ? 50 : 20 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
@@ -111,8 +127,8 @@ console.log(dashboard)
             />
             <YAxis allowDecimals={false} />
             {!isMobile && <Tooltip />}
-            <Bar dataKey="completed" fill="#22c55e" radius={[5, 5, 0, 0]} />
-            <Bar dataKey="pending" fill="#facc15" radius={[5, 5, 0, 0]} />
+            <Bar dataKey="completed" fill="var(--color-gold)" radius={[5, 5, 0, 0]} />
+            <Bar dataKey="pending" fill="var(--color-slate)" radius={[5, 5, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -122,7 +138,10 @@ console.log(dashboard)
 
 // CARD COMPONENT
 const Card = ({ title, value, bg }) => (
-  <div className={`p-5 shadow-md rounded-xl text-white flex flex-col justify-center items-center ${bg}`}>
+  <div
+    className="p-5 shadow-md rounded-xl text-white flex flex-col justify-center items-center"
+    style={{ backgroundColor: bg }}
+  >
     <p className="text-sm md:text-base">{title}</p>
     <h2 className="text-2xl md:text-3xl font-bold mt-2">{value}</h2>
   </div>

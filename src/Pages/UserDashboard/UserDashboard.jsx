@@ -16,13 +16,27 @@ import {
 import useAxiosSecure from "../../Router/hooks/useAxiosSecure";
 import LoadingPage from "../LoadingPage";
 
-const COLORS = ["#2596be", "#0494f4", "#0b3b6b", "#3cdaa7", "#f4b400"];
+// Define custom colors (can be CSS variables from your theme)
+const COLORS = [
+  "var(--color-gold)",       // example: Total Bookings
+  "var(--color-slate)",      // example: Ongoing
+  "var(--color-blue)",       // example: Completed
+  "var(--color-dark-blue)",  // example: My Vehicles
+  "var(--color-accent)",     // optional extra color
+];
 
 const UserDashboard = () => {
-  const isMobile = window.innerWidth < 640;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
+
+  // Handle window resize for responsiveness
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -48,15 +62,15 @@ const UserDashboard = () => {
     <div className="p-2 md:p-6 space-y-10">
       {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <Card title="Total Bookings" value={summary.totalBookings} bg="bg-blue-500" />
-        <Card title="Ongoing" value={summary.ongoing} bg="bg-yellow-500" />
-        <Card title="Completed" value={summary.completed} bg="bg-purple-500" />
-        <Card title="My Vehicles" value={summary.myVehicles} bg="bg-green-500" />
+        <Card title="Total Bookings" value={summary.totalBookings} bg="var(--color-gold)" />
+        <Card title="Ongoing" value={summary.ongoing} bg="var(--color-slate)" />
+        <Card title="Completed" value={summary.completed} bg="var(--color-blue)" />
+        <Card title="My Vehicles" value={summary.myVehicles} bg="var(--color-dark-blue)" />
       </div>
 
       {/* PIE CHART: BOOKINGS STATUS */}
       <div className="p-2 md:p-6 rounded-xl shadow-lg bg-base-200 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 text-neutral-content">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 text-neutral-content fredoka-font">
           Bookings Status Breakdown
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
@@ -72,8 +86,7 @@ const UserDashboard = () => {
               label={
                 isMobile
                   ? false
-                  : ({ _id, percent }) =>
-                      `${formatStatus(_id)}: ${(percent * 100).toFixed(0)}%`
+                  : ({ _id, percent }) => `${formatStatus(_id)}: ${(percent * 100).toFixed(0)}%`
               }
             >
               {bookingsSummary.map((_, i) => (
@@ -96,7 +109,7 @@ const UserDashboard = () => {
 
       {/* BAR CHART: BOOKINGS PER VEHICLE CATEGORY */}
       <div className="p-2 md:p-6 rounded-xl shadow-lg bg-base-200 text-center">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 text-neutral-content">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 text-neutral-content fredoka-font">
           Bookings Per Vehicle Category
         </h2>
         <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
@@ -120,7 +133,7 @@ const UserDashboard = () => {
             {!isMobile && <Tooltip />}
             <Bar
               dataKey="count"
-              fill="#0494f4"
+              fill="var(--color-slate)" // theme-aware color
               radius={isMobile ? [3, 3, 0, 0] : [5, 5, 0, 0]}
               barSize={isMobile ? 20 : 30}
             />
@@ -133,7 +146,10 @@ const UserDashboard = () => {
 
 // CARD COMPONENT
 const Card = ({ title, value, bg }) => (
-  <div className={`p-5 shadow-md rounded-xl text-white flex flex-col justify-center items-center ${bg}`}>
+  <div
+    className="p-5 shadow-md rounded-xl text-white flex flex-col justify-center items-center"
+    style={{ backgroundColor: bg }}
+  >
     <p className="text-[12px] md:text-base">{title}</p>
     <h2 className="text-2xl md:text-3xl font-bold mt-2">{value}</h2>
   </div>

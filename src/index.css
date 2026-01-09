@@ -28,7 +28,13 @@
   --color-info: #60A5FA;      /* Soft info blue */
   --color-success: #34D399;   /* Green success */
   --color-warning: #FDBA74;   /* Orange warning */
-  --color-error: #F87171;     /* Red error */
+  --color-error: #F87171;     /* Red error */ 
+  /* Custom hex colors for cards */
+  --color-gold: #D4AF37;
+  --color-slate: #367d8a;
+  --color-blue: #2d6bb8;
+  --color-dark-blue: #273270;
+
  
 }
 
@@ -60,6 +66,13 @@
   --color-success: #22C55E;   /* Success green */
   --color-warning: #FB923C;   /* Warning orange */
   --color-error: #EF4444;     /* Error red */
+
+
+   /* Custom hex colors for cards */
+  --color-gold: #D4AF37;
+  --color-slate: #367d8a;
+  --color-blue: #2d6bb8;
+  --color-dark-blue: #273270;
  
 
 }

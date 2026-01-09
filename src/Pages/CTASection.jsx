@@ -23,7 +23,7 @@ const CTASection = () => {
           </p>
 
           <button
-            onClick={() => navigate("/dashboard/add-vehicle")}
+            onClick={() => navigate("/addVehicles")}
             className="btn btn-primary px-8
              transition-all duration-300
              hover:-translate-y-1 hover:shadow-2xl
@@ -49,7 +49,7 @@ const CTASection = () => {
           </p>
 
           <button
-            onClick={() => navigate("/all-vehicles")}
+            onClick={() => navigate("/allVehicles")}
             className="btn btn-secondary px-8
              transition-all duration-300
              hover:-translate-y-1 hover:shadow-2xl
